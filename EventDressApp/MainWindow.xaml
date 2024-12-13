@@ -46,7 +46,8 @@
                              Height="50"
                              Foreground="Black"
                              FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" Command="{Binding ClientesViewCommand}"/>
+                             Style="{StaticResource MenuButtonTheme}" 
+                             Command="{Binding InventarioViewCommand}"/>
 
                 <RadioButton Content="Alquiler" 
                              Height="50" 
