@@ -42,16 +42,16 @@ namespace EventDressApp.MVVM.ViewModel
             {
                 new DETALLE_MODELO
                 {
-                    trajeid = 1,
-                    categoriaid = "Formal",
-                    nombre_traje = "Traje",
-                    descripcion_traje = "Traje formal",
-                    genero_traje = "Masculino",
-                    talla_traje = "M",
-                    color_traje = "Negro",
-                    precio_diario_traje = 50,
-                    estado_traje = "Disponible",
-                    ruta_imagen_traje = ""
+                    TrajeId = 1,
+                    CategoriaId = 1,
+                    NombreTraje = "Traje",
+                    DescripcionTraje = "Traje formal",
+                    GeneroTraje = "Masculino",
+                    TallaTraje = "M",
+                    ColorTraje = "Negro",
+                    PrecioDiarioTraje = 50,
+                    EstadoTraje = "Disponible",
+                    RutaImagenTraje = ""
                 }
             };
 
@@ -67,7 +67,7 @@ namespace EventDressApp.MVVM.ViewModel
 
         private void EditarTraje(object obj)
         {
-            System.Diagnostics.Debug.WriteLine($"Editar Traje: {TrajeSeleccionado?.nombre_traje}");
+            System.Diagnostics.Debug.WriteLine($"Editar Traje: {TrajeSeleccionado?.NombreTraje}");
         }
 
         private bool CanEditarTraje(object obj)

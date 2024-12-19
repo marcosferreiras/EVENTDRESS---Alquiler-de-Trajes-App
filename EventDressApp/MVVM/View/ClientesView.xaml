@@ -4,10 +4,70 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EventDressApp.MVVM.View"
+             xmlns:viewModel="clr-namespace:EventDressApp.MVVM.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             Background="Green">
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.DataContext>
+        <viewModel:ClientesViewModel/>
+    </UserControl.DataContext>
+
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Barra de búsqueda y filtros -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+            <ComboBox Width="150" Margin="530,-20,0,0" SelectedItem="{Binding FiltroEstado}">
+                <ComboBoxItem>Todos</ComboBoxItem>
+                <ComboBoxItem>Activo</ComboBoxItem>
+                <ComboBoxItem>Inactivo</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+
+        <!-- DataGrid de Clientes -->
+        <DataGrid Grid.Row="1" 
+                  ItemsSource="{Binding Clientes}"
+                  SelectedItem="{Binding ClienteSeleccionado}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding cliente_id}"/>
+                <DataGridTextColumn Header="Nombre" Binding="{Binding nombre_cliente}"/>
+                <DataGridTextColumn Header="Apellido" Binding="{Binding apellido_cliente}"/>
+                <DataGridTextColumn Header="Documento" Binding="{Binding detalle_cliente.documento_cliente}"/>
+                <DataGridTextColumn Header="Teléfono" Binding="{Binding detalle_cliente.telefono_cliente}"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding detalle_cliente.email_cliente}"/>
+                <DataGridTextColumn Header="Dirección" Binding="{Binding detalle_cliente.direccion_cliente}"/>
+                <DataGridTextColumn Header="Último Alquiler" Binding="{Binding fecha_ultimo_alquiler_cliente, StringFormat=dd/MM/yyyy}"/>
+                <DataGridTextColumn Header="Total Alquileres" Binding="{Binding total_alquileres_cliente}"/>
+                <DataGridTextColumn Header="Estado" Binding="{Binding detalle_cliente.estado_cliente}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Botones de acción -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Margin="10">
+            <Button Content="Agregar" 
+                    Command="{Binding AgregarClienteCommand}"
+                    Margin="0,0,10,0"/>
+            <Button Content="Editar" 
+                    Command="{Binding EditarClienteCommand}"
+                    IsEnabled="{Binding ClienteSeleccionado, Converter={StaticResource NullToBooleanConverter}}"
+                    Margin="0,0,10,0"/>
+            <Button Content="Ver Detalles" 
+                    Command="{Binding VerDetallesCommand}"
+                    IsEnabled="{Binding ClienteSeleccionado, Converter={StaticResource NullToBooleanConverter}}"
+                    Margin="0,0,10,0"/>
+            <Button Content="Cambiar Estado" 
+                    Command="{Binding CambiarEstadoCommand}"
+                    IsEnabled="{Binding ClienteSeleccionado, Converter={StaticResource NullToBooleanConverter}}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
