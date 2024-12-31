@@ -28,37 +28,35 @@
         </StackPanel>
 
         <!-- Lista de Trajes -->
-        <DataGrid Grid.Row="1" 
-                  ItemsSource="{Binding Trajes}"
-                  SelectedItem="{Binding TrajeSeleccionado}"
-                  AutoGenerateColumns="False"
-                  Margin="10">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding modelo}" SelectedItem="{Binding modeloSeleccionado}"
+                  AutoGenerateColumns="False" IsReadOnly="True" Margin="10">
+            
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding trajeid}"/>
-                <DataGridTextColumn Header="Categoría" Binding="{Binding categoriaid}"/>
-                <DataGridTextColumn Header="Nombre" Binding="{Binding nombre_traje}"/>
-                <DataGridTextColumn Header="Descripción" Binding="{Binding descripcion_traje}"/>
-                <DataGridTextColumn Header="Genero" Binding="{Binding genero_traje}"/>
-                <DataGridTextColumn Header="Talla" Binding="{Binding talla_traje}"/>
-                <DataGridTextColumn Header="Color" Binding="{Binding color_traje}"/>
-                <DataGridTextColumn Header="Precio Diario" Binding="{Binding precio_diario_traje}"/>
-                <DataGridTextColumn Header="Estado" Binding="{Binding estado_traje}"/>
-                <DataGridTextColumn Header="Imagen" Binding="{Binding ruta_imagen_traje}"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding TrajeId}" Width="Auto"/>
+                <DataGridTextColumn Header="Categoría" Binding="{Binding CategoriaId}" Width="*"/>
+                <DataGridTextColumn Header="Nombre" Binding="{Binding NombreTraje}" Width="*"/>
+                <DataGridTextColumn Header="Descripción" Binding="{Binding DescripcionTraje}" Width="*"/>
+                <DataGridTextColumn Header="Genero" Binding="{Binding GeneroTraje}" Width="*"/>
+                <DataGridTextColumn Header="Talla" Binding="{Binding TallaTraje}" Width="*"/>
+                <DataGridTextColumn Header="Color" Binding="{Binding ColorTraje}" Width="*"/>
+                <DataGridTextColumn Header="Precio Diario" Binding="{Binding PrecioDiarioTraje}" Width="*"/>
+                <DataGridTextColumn Header="Estado" Binding="{Binding EstadoTraje}" Width="*"/>
+                <DataGridTextColumn Header="Imagen" Binding="{Binding RutaImagenTraje}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
 
         <!-- Botones de Acción -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button Content="Agregar" 
-                    Command="{Binding AgregarTrajeCommand}"
+                    Command="{Binding AgregarmodeloCommand}"
                     Margin="0,0,10,0"/>
             <Button Content="Editar" 
-                    Command="{Binding EditarTrajeCommand}"
-                    IsEnabled="{Binding TrajeSeleccionado, Converter={StaticResource NullToBooleanConverter}}"/>
+                    Command="{Binding EditarmodeloCommand}"
+                    IsEnabled="{Binding modeloSeleccionado, Converter={StaticResource NullToBooleanConverter}}"/>
             <Button Content="Eliminar" 
-                    Command="{Binding EliminarTrajeCommand}"
+                    Command="{Binding EliminarmodeloCommand}"
                     Margin="10,0,0,0"
-                    IsEnabled="{Binding TrajeSeleccionado, Converter={StaticResource NullToBooleanConverter}}"/>
+                    IsEnabled="{Binding modeloSeleccionado, Converter={StaticResource NullToBooleanConverter}}"/>
         </StackPanel>
     </Grid>
 </UserControl>

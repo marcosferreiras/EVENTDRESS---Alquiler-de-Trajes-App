@@ -8,10 +8,12 @@ namespace EventDressApp.MVVM.ViewModel
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand ClientesViewCommand { get; set; }
         public RelayCommand InventarioViewCommand { get; set; }
+        public RelayCommand UsuariosViewCommand { get; set; }
 
         public HomeViewModel HomeVm{ get; set; }  
         public ClientesViewModel ClientesVm{ get; set; }
         public InventarioViewModel InventarioVm { get; set; }
+        public UsuariosViewModel UsuariosVm { get; set; }
 
         private object _currentView;
 
@@ -28,6 +30,7 @@ namespace EventDressApp.MVVM.ViewModel
             HomeVm = new HomeViewModel();
             ClientesVm = new ClientesViewModel();
             InventarioVm = new InventarioViewModel();
+            UsuariosVm = new UsuariosViewModel();
             CurrentView = HomeVm;
 
             HomeViewCommand = new RelayCommand(o =>
@@ -43,6 +46,11 @@ namespace EventDressApp.MVVM.ViewModel
             InventarioViewCommand = new RelayCommand(o =>
             {
                 CurrentView = InventarioVm;
+            });
+
+            UsuariosViewCommand = new RelayCommand(o =>
+            {
+                CurrentView = UsuariosVm;
             });
         }
     }

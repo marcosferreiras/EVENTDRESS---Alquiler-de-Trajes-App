@@ -61,6 +61,12 @@
                              Foreground="Black"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"/>
+                <RadioButton Content="Usuarios" 
+                             Height="50"
+                             Foreground="Black"
+                             FontSize="14"
+                             Style="{StaticResource MenuButtonTheme}" 
+                             Command="{Binding UsuariosViewCommand}"/>
             </StackPanel>
 
             <TextBox Width="250"

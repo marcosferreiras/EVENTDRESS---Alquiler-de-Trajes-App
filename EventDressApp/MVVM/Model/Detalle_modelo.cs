@@ -23,7 +23,7 @@ namespace EventDressApp.MVVM.Model
 
 
         public int TrajeId { get => trajeid; set { if (trajeid != value) { trajeid = value; OnPropertyChanged(); } } }
-        public int CategoriaId { get =>categoriaid; set { if (categoriaid != value) { categoriaid = value; OnPropertyChanged(); } } }
+        public int CategoriaId { get => categoriaid; set { if (categoriaid != value) { categoriaid = value; OnPropertyChanged(); } } }
         public string NombreTraje { get => nombretraje; set { if (nombretraje != value) { nombretraje = value; OnPropertyChanged(); } } }
         public string DescripcionTraje { get => descripciontraje; set { if (descripciontraje != value) { descripciontraje = value; OnPropertyChanged(); } } }
         public string GeneroTraje { get => generotraje; set { if (generotraje != value) { generotraje = value; OnPropertyChanged(); } } }

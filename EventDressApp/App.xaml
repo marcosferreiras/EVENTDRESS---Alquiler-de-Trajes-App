@@ -25,6 +25,9 @@
             <DataTemplate DataType="{x:Type viewModel:InventarioViewModel}">
                 <view:InventarioView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:UsuariosViewModel}">
+                <view:UsuariosView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

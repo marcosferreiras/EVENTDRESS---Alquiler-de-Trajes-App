@@ -4,92 +4,130 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using EventDressApp.MVVM.Model;
 using EventDressApp.Helpers;
+using EventDressApp.MVVM.View.Dialogs;
+using EventDressApp.MVVM.ViewModel.DialogViewModels;
 
 namespace EventDressApp.MVVM.ViewModel
 {
     internal class InventarioViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<DETALLE_MODELO> _trajes;
-        private DETALLE_MODELO _trajeSeleccionado;
+        private ObservableCollection<DETALLE_MODELO> _modelo;
+        private DETALLE_MODELO _modeloSeleccionado;
 
-        public ObservableCollection<DETALLE_MODELO> Trajes
+        public ObservableCollection<DETALLE_MODELO> modelo
         {
-            get => _trajes;
+            get => _modelo;
             set
             {
-                _trajes = value;
+                _modelo = value;
                 OnPropertyChanged();
             }
         }
 
-        public DETALLE_MODELO TrajeSeleccionado
+        public DETALLE_MODELO modeloSeleccionado
         {
-            get => _trajeSeleccionado;
+            get => _modeloSeleccionado;
             set
             {
-                _trajeSeleccionado = value;
+                _modeloSeleccionado = value;
                 OnPropertyChanged();
             }
         }
 
-        public ICommand AgregarTrajeCommand { get; }
-        public ICommand EditarTrajeCommand { get; }
-        public ICommand EliminarTrajeCommand { get; }
+        public ICommand AgregarmodeloCommand { get; }
+        public ICommand EditarmodeloCommand { get; }
+        public ICommand EliminarmodeloCommand { get; }
 
         public InventarioViewModel()
         {
-            Trajes = new ObservableCollection<DETALLE_MODELO>
+            modelo = new ObservableCollection<DETALLE_MODELO>();
+            CargarDatos();
+
+            AgregarmodeloCommand = new RelayCommand(Agregarmodelo);
+            EditarmodeloCommand = new RelayCommand(Editarmodelo, CanEditarmodelo);
+            EliminarmodeloCommand = new RelayCommand(Eliminarmodelo, CanEliminarmodelo);
+        }
+
+        private void CargarDatos()
+        {
+            modelo.Add(new DETALLE_MODELO
             {
-                new DETALLE_MODELO
-                {
-                    TrajeId = 1,
-                    CategoriaId = 1,
-                    NombreTraje = "Traje",
-                    DescripcionTraje = "Traje formal",
-                    GeneroTraje = "Masculino",
-                    TallaTraje = "M",
-                    ColorTraje = "Negro",
-                    PrecioDiarioTraje = 50,
-                    EstadoTraje = "Disponible",
-                    RutaImagenTraje = ""
-                }
-            };
+                TrajeId = 1,
+                CategoriaId = 1,
+                NombreTraje = "Traje",
+                DescripcionTraje = "Traje formal",
+                GeneroTraje = "Masculino",
+                TallaTraje = "M",
+                ColorTraje = "Negro",
+                PrecioDiarioTraje = 50,
+                EstadoTraje = "Disponible",
+                RutaImagenTraje = ""
+            });
+         }
 
-            AgregarTrajeCommand = new RelayCommand(AgregarTraje);
-            EditarTrajeCommand = new RelayCommand(EditarTraje, CanEditarTraje);
-            EliminarTrajeCommand = new RelayCommand(EliminarTraje, CanEliminarTraje);
-        }
-
-        private void AgregarTraje(object obj)
+            
+        private void Agregarmodelo(object obj)
         {
-            System.Diagnostics.Debug.WriteLine("Agregar Traje");
-        }
-
-        private void EditarTraje(object obj)
-        {
-            System.Diagnostics.Debug.WriteLine($"Editar Traje: {TrajeSeleccionado?.NombreTraje}");
-        }
-
-        private bool CanEditarTraje(object obj)
-        {
-            return TrajeSeleccionado != null;
-        }
-
-        private void EliminarTraje(object obj)
-        {
-            if (TrajeSeleccionado != null)
+            var dialog = new DialogoInventario();
+            if (dialog.ShowDialog() == true)
             {
-                Trajes.Remove(TrajeSeleccionado);
+                var nuevoTraje = ((DialogoInventarioViewModel)dialog.DataContext).Traje;
+                // TODO: Guardar en la base de datos
+                modelo.Add(nuevoTraje);
             }
         }
 
-        private bool CanEliminarTraje(object obj)
+        private void Editarmodelo(object obj)
         {
-            return TrajeSeleccionado != null;
+            var trajeParaEditar = new DETALLE_MODELO
+            {
+                TrajeId = modeloSeleccionado.TrajeId,
+                CategoriaId = modeloSeleccionado.CategoriaId,
+                NombreTraje = modeloSeleccionado.NombreTraje,
+                DescripcionTraje = modeloSeleccionado.DescripcionTraje,
+                GeneroTraje = modeloSeleccionado.GeneroTraje,
+                TallaTraje = modeloSeleccionado.TallaTraje,
+                ColorTraje = modeloSeleccionado.ColorTraje,
+                PrecioDiarioTraje = modeloSeleccionado.PrecioDiarioTraje,
+                EstadoTraje = modeloSeleccionado.EstadoTraje,
+                RutaImagenTraje = modeloSeleccionado.RutaImagenTraje
+            };
+
+            var dialog = new DialogoInventario(trajeParaEditar);
+            if (dialog.ShowDialog() == true)
+            {
+                var trajeActualizado = ((DialogoInventarioViewModel)dialog.DataContext).Traje;
+
+                // TODO: Actualizar en la base de datos
+
+                // Actualizar en la colección
+                var index = modelo.IndexOf(modeloSeleccionado);
+                if (index != -1)
+                {
+                    modelo[index] = trajeActualizado;
+                }
+            }
+        }
+
+        private bool CanEditarmodelo(object obj)
+        {
+            return modeloSeleccionado != null;
+        }
+
+        private void Eliminarmodelo(object obj)
+        {
+            if (modeloSeleccionado != null)
+            {
+                _modelo.Remove(modeloSeleccionado);
+            }
+        }
+
+        private bool CanEliminarmodelo(object obj)
+        {
+            return modeloSeleccionado != null;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

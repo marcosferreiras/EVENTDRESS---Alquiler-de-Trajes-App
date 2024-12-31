@@ -29,12 +29,8 @@
         </StackPanel>
 
         <!-- DataGrid de Clientes -->
-        <DataGrid Grid.Row="1" 
-                  ItemsSource="{Binding Clientes}"
-                  SelectedItem="{Binding ClienteSeleccionado}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  Margin="10">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Clientes}" SelectedItem="{Binding ClienteSeleccionado}"
+                  AutoGenerateColumns="False" IsReadOnly="True" Margin="10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding cliente_id}"/>
                 <DataGridTextColumn Header="Nombre" Binding="{Binding nombre_cliente}"/>
@@ -50,10 +46,7 @@
         </DataGrid>
 
         <!-- Botones de acción -->
-        <StackPanel Grid.Row="2" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Right" 
-                    Margin="10">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button Content="Agregar" 
                     Command="{Binding AgregarClienteCommand}"
                     Margin="0,0,10,0"/>
