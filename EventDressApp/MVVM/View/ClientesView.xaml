@@ -29,21 +29,19 @@
         </StackPanel>
 
         <!-- DataGrid de Clientes -->
-        <DataGrid x:Name="ClientesDGW" Grid.Row="1" ItemsSource="{Binding Clientes}" 
-                  SelectedItem="{Binding ClienteSeleccionado}"
-                  AutoGenerateColumns="False" IsReadOnly="True" Margin="10" 
+        <DataGrid x:Name="ClientesDGV" Grid.Row="1" ItemsSource="{Binding Clientes}" 
+                  AutoGenerateColumns="False" IsReadOnly="True" Margin="10" SelectionMode="Single"
                   SelectionChanged="DataGrid_SelectionChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding cliente_id}"/>
+                <DataGridTextColumn x:Name="ClientDGV" Header="ID" Binding="{Binding cliente_id}"/>
                 <DataGridTextColumn Header="Nombre" Binding="{Binding nombre_cliente}"/>
                 <DataGridTextColumn Header="Apellido" Binding="{Binding apellido_cliente}"/>
-                <DataGridTextColumn Header="Documento" Binding="{Binding detalle_cliente.documento_cliente}"/>
-                <DataGridTextColumn Header="Teléfono" Binding="{Binding detalle_cliente.telefono_cliente}"/>
-                <DataGridTextColumn Header="Email" Binding="{Binding detalle_cliente.email_cliente}"/>
-                <DataGridTextColumn Header="Dirección" Binding="{Binding detalle_cliente.direccion_cliente}"/>
+                <DataGridTextColumn Header="Documento" Binding="{Binding documento_cliente}"/>
+                <DataGridTextColumn Header="Teléfono" Binding="{Binding telefono_cliente}"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding email_cliente}"/>
+                <DataGridTextColumn Header="Dirección" Binding="{Binding direccion_cliente}"/>
                 <DataGridTextColumn Header="Último Alquiler" Binding="{Binding fecha_ultimo_alquiler_cliente, StringFormat=dd/MM/yyyy}"/>
                 <DataGridTextColumn Header="Total Alquileres" Binding="{Binding total_alquileres_cliente}"/>
-                <DataGridTextColumn Header="Estado" Binding="{Binding detalle_cliente.estado_cliente}"/>
             </DataGrid.Columns>
         </DataGrid>
 
@@ -60,9 +58,8 @@
                     Command="{Binding VerDetallesCommand}"
                     IsEnabled="{Binding ClienteSeleccionado, Converter={StaticResource NullToBooleanConverter}}"
                     Margin="0,0,10,0"/>
-            <Button Content="Cambiar Estado" 
-                    Command="{Binding CambiarEstadoCommand}"
-                    IsEnabled="{Binding ClienteSeleccionado, Converter={StaticResource NullToBooleanConverter}}"/>
+            <Button x:Name="DeleteClientBtn" Content="Eliminar" 
+                Click="DeleteClientBtn_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>
