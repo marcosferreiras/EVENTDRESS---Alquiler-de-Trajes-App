@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Gestión de Cliente" 
-        Height="450" 
-        Width="400"
+        Height="562" 
+        Width="499"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
     
@@ -21,34 +21,34 @@
         <ScrollViewer Grid.Row="1">
             <StackPanel>
                 <!-- Campos del formulario -->
-                <GroupBox Header="Datos Personales" Margin="0,0,0,10">
+                <GroupBox Header="Datos Personales" Margin="0,0,0,10" Width="410">
                     <StackPanel Margin="5">
                         <Label Content="Nombre:"/>
-                        <TextBox Text="{Binding Cliente.NombreCliente, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="NombreClienteTB" Text="{Binding Cliente.NombreCliente, UpdateSourceTrigger=PropertyChanged}"
                             Margin="0,0,0,10"/>
                         
                         <Label Content="Apellido:"/>
-                        <TextBox Text="{Binding Cliente.ApellidoCliente, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="ApellidoClienteTB" Text="{Binding Cliente.ApellidoCliente, UpdateSourceTrigger=PropertyChanged}"
                             Margin="0,0,0,10"/>
                         
                         <Label Content="Documento:"/>
-                        <TextBox Text="{Binding Cliente.DetalleCliente.DocumentoCliente, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="DocumentoClienteTB" Text="{Binding Cliente.DetalleCliente.DocumentoCliente, UpdateSourceTrigger=PropertyChanged}"
                             Margin="0,0,0,10"/>
                     </StackPanel>
                 </GroupBox>
 
-                <GroupBox Header="Información de Contacto" Margin="0,0,0,10">
+                <GroupBox Header="Información de Contacto" Margin="0,0,0,10" Width="411">
                     <StackPanel Margin="5">
                         <Label Content="Dirección:"/>
-                        <TextBox Text="{Binding Cliente.DetalleCliente.DireccionCliente, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="DireccionClienteTB" Text="{Binding Cliente.DetalleCliente.DireccionCliente, UpdateSourceTrigger=PropertyChanged}"
                             Margin="0,0,0,10"/>
                         
                         <Label Content="Teléfono:"/>
-                        <TextBox Text="{Binding Cliente.DetalleCliente.TelefonoCliente, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="TelefonoClienteTB" Text="{Binding Cliente.DetalleCliente.TelefonoCliente, UpdateSourceTrigger=PropertyChanged}"
                             Margin="0,0,0,10"/>
                         
                         <Label Content="Email:"/>
-                        <TextBox Text="{Binding Cliente.DetalleCliente.EmailCliente, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="EmailClienteTB" Text="{Binding Cliente.DetalleCliente.EmailCliente, UpdateSourceTrigger=PropertyChanged}"
                             Margin="0,0,0,10"/>
                     </StackPanel>
                 </GroupBox>
@@ -59,10 +59,10 @@
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right" 
                     Margin="0,10,0,0">
-            <Button Content="Guardar" 
+            <Button x:Name="GuardarClienteBtn" Content="Guardar" 
                     Command="{Binding GuardarCommand}"
                     Width="80" 
-                    Margin="0,0,10,0"/>
+                    Margin="0,0,10,0" Click="CrearCliente"/>
             <Button Content="Cancelar" 
                     Command="{Binding CancelarCommand}"
                     Width="80"/>

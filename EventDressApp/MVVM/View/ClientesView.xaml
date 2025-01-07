@@ -49,7 +49,7 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button Content="Agregar" 
                     Command="{Binding AgregarClienteCommand}"
-                    Margin="0,0,10,0"/>
+                    Margin="0,0,10,0" Click="Button_Click"/>
             <Button Content="Editar" 
                     Command="{Binding EditarClienteCommand}"
                     IsEnabled="{Binding ClienteSeleccionado, Converter={StaticResource NullToBooleanConverter}}"
