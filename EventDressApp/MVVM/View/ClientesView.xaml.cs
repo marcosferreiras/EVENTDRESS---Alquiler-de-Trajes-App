@@ -1,33 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using EventDressApp.MVVM.Model;
 
 namespace EventDressApp.MVVM.View
 {
-    /// <summary>
-    /// Interaction logic for ClientesView.xaml
-    /// </summary>
     public partial class ClientesView : UserControl
     {
         public ClientesView()
         {
             InitializeComponent();
+            LoadClientesData(); // Cargar datos al inicializar
+        }
+
+        // Método para cargar los clientes activos en el DataGrid
+        private void LoadClientesData()
+        {
+            try
+            {
+                // Llamar al helper para ejecutar la stored procedure 'ObtenerClientesActivos'
+                DataTable dtClientes = DatabaseHelper.Instance.ExecuteStoredProcedureWithResults("ObtenerClientesActivos");
+
+                // Asignar el DataTable al DataGrid
+                ClientesDGW.ItemsSource = dtClientes.DefaultView;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los datos de los clientes: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            // Lógica para el clic en un botón
+        }
 
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Lógica al cambiar selección en el DataGrid
         }
     }
 }
