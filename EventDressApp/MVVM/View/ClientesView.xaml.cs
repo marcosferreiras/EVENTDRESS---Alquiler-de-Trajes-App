@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Data.SqlClient;
 using EventDressApp.MVVM.Model;
+using EventDressApp.MVVM.View.Dialogos;
 
 namespace EventDressApp.MVVM.View
 {
@@ -46,34 +47,32 @@ namespace EventDressApp.MVVM.View
         {
             try
             {
-                // Obtener el cliente_id desde la fila seleccionada en el DataGrid
+                // Verificar si hay un cliente seleccionado
                 DataRowView selectedRow = ClientesDGV.SelectedItem as DataRowView;
                 if (selectedRow != null)
                 {
-                    int clienteId = Convert.ToInt32(selectedRow["cliente_id"]); // Asumiendo que "cliente_id" es el nombre de la columna
+                    int clienteId = Convert.ToInt32(selectedRow["cliente_id"]);
 
                     // Mostrar el pop-up de confirmación
-                    MessageBoxResult result = MessageBox.Show("¿Estás seguro de que deseas eliminar este cliente?",
-                                                              "Confirmar eliminación",
-                                                              MessageBoxButton.YesNo,
-                                                              MessageBoxImage.Warning);
+                    var dialogo = new DialogoConfirmacionEliminar();
+                    dialogo.ShowDialog(); // Abrir el pop-up
 
                     // Si el usuario confirma, eliminar el cliente
-                    if (result == MessageBoxResult.Yes)
+                    if (dialogo.ConfirmacionExitosa)
                     {
-                        // Crear el parámetro para el stored procedure
+                        // Crear el parámetro para el procedimiento almacenado
                         SqlParameter[] parameters = new SqlParameter[] {
                     new SqlParameter("@cliente_id", SqlDbType.Int) { Value = clienteId }
                 };
 
-                        // Ejecutar el procedimiento almacenado
+                        // Ejecutar el procedimiento almacenado para eliminar al cliente
                         int rowsAffected = DatabaseHelper.Instance.ExecuteStoredProcedure("BorrarCliente", parameters);
 
                         // Verificar si el cliente fue eliminado exitosamente
                         if (rowsAffected > 0)
                         {
                             MessageBox.Show("Cliente eliminado exitosamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-                            LoadClientesData(); // Recargar la lista de clientes
+                            LoadClientesData(); // Recargar la lista de clientes después de eliminar
                         }
                         else
                         {
@@ -92,6 +91,7 @@ namespace EventDressApp.MVVM.View
                 MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
