@@ -15,7 +15,7 @@ namespace EventDressApp.MVVM.View.Dialogos
         private void Confirmar_Click(object sender, RoutedEventArgs e)
         {
             // Verificar si el usuario ha escrito "Eliminar"
-            if (ConfirmarEliminarTB.Text.Equals("Eliminar", StringComparison.OrdinalIgnoreCase))
+            if (ConfirmarEliminarTB.Text == "Eliminar")
             {
                 ConfirmacionExitosa = true;  // Se confirma la eliminación
                 this.Close();  // Cerrar la ventana emergente
