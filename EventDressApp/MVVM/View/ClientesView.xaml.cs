@@ -5,6 +5,8 @@ using System.Windows.Controls;
 using Microsoft.Data.SqlClient;
 using EventDressApp.MVVM.Model;
 using EventDressApp.MVVM.View.Dialogos;
+using EventDressApp.MVVM.View.Dialogs;
+using EventDressApp.MVVM.ViewModel.DialogViewModels;
 
 namespace EventDressApp.MVVM.View
 {
@@ -92,11 +94,18 @@ namespace EventDressApp.MVVM.View
             }
         }
 
-
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Add_Client_Button_Click(object sender, RoutedEventArgs e)
         {
-            // Lógica para el clic en otros botones (si aplica)
+            var dialogo = new DialogoCliente();
+            dialogo.ShowDialog(); // Abrir el pop-up
+            LoadClientesData(); // Cargar datos al 
+
+            //var dialog = new DialogoCliente();
+            //var nuevoCliente = new DialogoClienteViewModel();
+            //if (dialog.ShowDialog() == true)
+            //{
+            //    // TODO: Agregar a la base de datos
+            //}
         }
     }
 }
