@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Gestión de Traje" 
-        Height="600" 
+        Height="833" 
         Width="500"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
@@ -24,22 +24,28 @@
                 <GroupBox Header="Información Básica" Margin="0,0,0,10">
                     <StackPanel Margin="5">
                         <Label Content="Nombre:"/>
-                        <TextBox Text="{Binding Traje.NombreTraje, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="NombreTrajeTB" Text="{Binding Traje.NombreTraje, UpdateSourceTrigger=PropertyChanged}"
                                 Margin="0,0,0,10"/>
 
                         <Label Content="Descripción:"/>
-                        <TextBox Text="{Binding Traje.DescripcionTraje, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="DescripcionTrajeTB" Text="{Binding Traje.DescripcionTraje, UpdateSourceTrigger=PropertyChanged}"
                                 TextWrapping="Wrap"
                                 AcceptsReturn="True"
                                 Height="60"
                                 Margin="0,0,0,10"/>
 
                         <Label Content="Categoría:"/>
-                        <ComboBox ItemsSource="{Binding Categorias}"
+                        <ComboBox x:Name="CategoriasCB" ItemsSource="{Binding Categorias}"
                                  DisplayMemberPath="NombreCategoria"
                                  SelectedValuePath="CategoriaId"
                                  SelectedValue="{Binding Traje.CategoriaId}"
                                  Margin="0,0,0,10"/>
+                        <Label Content="Marca:"/>
+                        <ComboBox x:Name="MarcasCB" ItemsSource="{Binding Categorias}"
+                            DisplayMemberPath="NombreCategoria"
+                            SelectedValuePath="CategoriaId"
+                            SelectedValue="{Binding Traje.CategoriaId}"
+                                 />
                     </StackPanel>
                 </GroupBox>
 
@@ -47,7 +53,7 @@
                 <GroupBox Header="Características" Margin="0,0,0,10">
                     <StackPanel Margin="5">
                         <Label Content="Género:"/>
-                        <ComboBox Text="{Binding Traje.GeneroTraje, UpdateSourceTrigger=PropertyChanged}"
+                        <ComboBox x:Name="GeneroCB" Text="{Binding Traje.GeneroTraje, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="0,0,0,10">
                             <ComboBoxItem>Masculino</ComboBoxItem>
                             <ComboBoxItem>Femenino</ComboBoxItem>
@@ -55,7 +61,7 @@
                         </ComboBox>
 
                         <Label Content="Talla:"/>
-                        <ComboBox Text="{Binding Traje.TallaTraje, UpdateSourceTrigger=PropertyChanged}"
+                        <ComboBox x:Name="TallaCB" Text="{Binding Traje.TallaTraje, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="0,0,0,10">
                             <ComboBoxItem>XS</ComboBoxItem>
                             <ComboBoxItem>S</ComboBoxItem>
@@ -66,7 +72,7 @@
                         </ComboBox>
 
                         <Label Content="Color:"/>
-                        <TextBox Text="{Binding Traje.ColorTraje, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="ColorTrajeTB" Text="{Binding Traje.ColorTraje, UpdateSourceTrigger=PropertyChanged}"
                                 Margin="0,0,0,10"/>
                     </StackPanel>
                 </GroupBox>
@@ -75,11 +81,11 @@
                 <GroupBox Header="Información Comercial" Margin="0,0,0,10">
                     <StackPanel Margin="5">
                         <Label Content="Precio Diario:"/>
-                        <TextBox Text="{Binding Traje.PrecioDiarioTraje, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="PrecioDiarioTB" Text="{Binding Traje.PrecioDiarioTraje, UpdateSourceTrigger=PropertyChanged}"
                                 Margin="0,0,0,10"/>
 
                         <Label Content="Estado:"/>
-                        <ComboBox Text="{Binding Traje.EstadoTraje, UpdateSourceTrigger=PropertyChanged}"
+                        <ComboBox x:Name="EstadoCB" Text="{Binding Traje.EstadoTraje, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="0,0,0,10">
                             <ComboBoxItem>Disponible</ComboBoxItem>
                             <ComboBoxItem>Alquilado</ComboBoxItem>
@@ -94,7 +100,7 @@
                                     Command="{Binding SeleccionarImagenCommand}"
                                     Width="80"
                                     Margin="5,0,0,0"/>
-                            <TextBox Text="{Binding Traje.RutaImagenTraje, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox x:Name="RutaImagenTB" Text="{Binding Traje.RutaImagenTraje, UpdateSourceTrigger=PropertyChanged}"
                                     IsReadOnly="True"/>
                         </DockPanel>
                     </StackPanel>
@@ -106,10 +112,10 @@
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right" 
                     Margin="0,10,0,0">
-            <Button Content="Guardar" 
+            <Button x:Name="Save_clothin_item_btn" Content="Guardar" 
                     Command="{Binding GuardarCommand}"
                     Width="80" 
-                    Margin="0,0,10,0"/>
+                    Margin="0,0,10,0" Click="Save_clothing_item"/>
             <Button Content="Cancelar" 
                     Command="{Binding CancelarCommand}"
                     Width="80"/>

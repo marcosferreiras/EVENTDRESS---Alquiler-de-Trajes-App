@@ -47,7 +47,7 @@
 
         <!-- Botones de Acción -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-            <Button Content="Agregar" 
+            <Button x:Name="add_suit" Content="Agregar" 
                     Command="{Binding AgregarmodeloCommand}"
                     Margin="0,0,10,0"/>
             <Button Content="Editar" 
