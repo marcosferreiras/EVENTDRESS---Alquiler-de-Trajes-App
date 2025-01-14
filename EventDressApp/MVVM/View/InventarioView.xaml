@@ -28,20 +28,23 @@
         </StackPanel>
 
         <!-- Lista de Trajes -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding modelo}" SelectedItem="{Binding modeloSeleccionado}"
-                  AutoGenerateColumns="False" IsReadOnly="True" Margin="10">
+        <DataGrid x:Name="InventarioDG" Grid.Row="1" ItemsSource="{Binding modelo}" SelectedItem="{Binding modeloSeleccionado}"
+                  AutoGenerateColumns="False" IsReadOnly="True" Margin="10" SelectionChanged="DataGrid_SelectionChanged">
             
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding TrajeId}" Width="Auto"/>
-                <DataGridTextColumn Header="Categoría" Binding="{Binding CategoriaId}" Width="*"/>
-                <DataGridTextColumn Header="Nombre" Binding="{Binding NombreTraje}" Width="*"/>
-                <DataGridTextColumn Header="Descripción" Binding="{Binding DescripcionTraje}" Width="*"/>
-                <DataGridTextColumn Header="Genero" Binding="{Binding GeneroTraje}" Width="*"/>
-                <DataGridTextColumn Header="Talla" Binding="{Binding TallaTraje}" Width="*"/>
-                <DataGridTextColumn Header="Color" Binding="{Binding ColorTraje}" Width="*"/>
-                <DataGridTextColumn Header="Precio Diario" Binding="{Binding PrecioDiarioTraje}" Width="*"/>
-                <DataGridTextColumn Header="Estado" Binding="{Binding EstadoTraje}" Width="*"/>
-                <DataGridTextColumn Header="Imagen" Binding="{Binding RutaImagenTraje}" Width="*"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding prenda_id}" Width="Auto"/>
+                <DataGridTextColumn Header="Categoría" Binding="{Binding nombre_categoria}" Width="*"/>
+                <DataGridTextColumn Header="Marca" Binding="{Binding nombre_marca}" Width="*"/>
+                <DataGridTextColumn Header="Nombre" Binding="{Binding nombre_prenda}" Width="*"/>
+                <DataGridTextColumn Header="Descripción" Binding="{Binding descripcion_prenda}" Width="*"/>
+                <DataGridTextColumn Header="Genero" Binding="{Binding genero_prenda}" Width="*"/>
+                <DataGridTextColumn Header="Talla" Binding="{Binding talla_prenda}" Width="*"/>
+                <DataGridTextColumn Header="Color" Binding="{Binding color_prenda}" Width="*"/>
+                <DataGridTextColumn Header="Precio Diario" Binding="{Binding precio_diario_prenda}" Width="*"/>
+                <DataGridTextColumn Header="Estado" Binding="{Binding estado_prenda}" Width="*"/>
+                <DataGridTextColumn Header="Imagen" Binding="{Binding ruta_imagen_prenda}" Width="*"/>
+                <DataGridTextColumn Header="Total" Binding="{Binding cantidad_total}" Width="*"/>
+                <DataGridTextColumn Header="Total alquilados" Binding="{Binding cantidad_alquilada}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
 
