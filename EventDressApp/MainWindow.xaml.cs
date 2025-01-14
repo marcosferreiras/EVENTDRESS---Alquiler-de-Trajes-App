@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using EventDressApp.MVVM.ViewModel;
 
 namespace EventDressApp
 {
@@ -19,6 +20,7 @@ namespace EventDressApp
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
