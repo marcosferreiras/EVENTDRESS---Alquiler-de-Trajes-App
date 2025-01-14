@@ -9,10 +9,10 @@ namespace EventDressApp.MVVM.Model
     {
         private static DatabaseHelper _instance;
         private readonly SqlConnection _connection;
-        private readonly string _connectionString = "Server=ALBINSON\\MSSQLSERVER01;Database=EVENTDRESS;Trusted_Connection=True; Encrypt=False;";
+        private readonly string _connectionString = "Server=MARCOS-FERREIRA\\MSSQLSERVER01;Database=EVENTDRESS;Trusted_Connection=True; Encrypt=False;";
 
         // Singleton pattern to ensure a single instance of DatabaseHelper
-        public static DatabaseHelper Instance
+        public static DatabaseHelper Instance   
         {
             get
             {
