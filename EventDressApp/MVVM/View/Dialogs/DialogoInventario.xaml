@@ -18,7 +18,7 @@
                    FontSize="20" 
                    Margin="0,0,0,10"/>
 
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="1" Margin="0,0,0,59">
             <StackPanel>
                 <!-- Datos básicos -->
                 <GroupBox Header="Información Básica" Margin="0,0,0,10">
@@ -35,17 +35,27 @@
                                 Margin="0,0,0,10"/>
 
                         <Label Content="Categoría:"/>
-                        <ComboBox x:Name="CategoriasCB" ItemsSource="{Binding Categorias}"
-                                 DisplayMemberPath="NombreCategoria"
-                                 SelectedValuePath="CategoriaId"
-                                 SelectedValue="{Binding Traje.CategoriaId}"
-                                 Margin="0,0,0,10"/>
+                        <DockPanel LastChildFill="True" Margin="0,0,0,10">
+                            <Button DockPanel.Dock="Right" 
+                                    Content="Gestionar" 
+                                    Width="80"
+                                    Margin="5,0,0,0"/>
+                            <ComboBox x:Name="CategoriasCB" ItemsSource="{Binding Categorias}"
+                                     DisplayMemberPath="NombreCategoria"
+                                     SelectionChanged="CategoriasCB_SelectionChanged"
+                                     />
+                        </DockPanel>
                         <Label Content="Marca:"/>
-                        <ComboBox x:Name="MarcasCB" ItemsSource="{Binding Categorias}"
+                        <DockPanel LastChildFill="True" Margin="0,0,0,10">
+                            <Button DockPanel.Dock="Right" 
+                                    Content="Gestionar" 
+                                    Width="80"
+                                    Margin="5,0,0,0"/>
+                            <ComboBox x:Name="MarcasCB" ItemsSource="{Binding Categorias}"
                             DisplayMemberPath="NombreCategoria"
-                            SelectedValuePath="CategoriaId"
-                            SelectedValue="{Binding Traje.CategoriaId}"
                                  />
+                        </DockPanel>
+
                     </StackPanel>
                 </GroupBox>
 
@@ -83,15 +93,6 @@
                         <Label Content="Precio Diario:"/>
                         <TextBox x:Name="PrecioDiarioTB" Text="{Binding Traje.PrecioDiarioTraje, UpdateSourceTrigger=PropertyChanged}"
                                 Margin="0,0,0,10"/>
-
-                        <Label Content="Estado:"/>
-                        <ComboBox x:Name="EstadoCB" Text="{Binding Traje.EstadoTraje, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="0,0,0,10">
-                            <ComboBoxItem>Disponible</ComboBoxItem>
-                            <ComboBoxItem>Alquilado</ComboBoxItem>
-                            <ComboBoxItem>En Mantenimiento</ComboBoxItem>
-                            <ComboBoxItem>Inactivo</ComboBoxItem>
-                        </ComboBox>
 
                         <Label Content="Imagen:"/>
                         <DockPanel LastChildFill="True" Margin="0,0,0,10">

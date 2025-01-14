@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using EventDressApp.MVVM.Model;
 
 namespace EventDressApp.MVVM.View
 {
@@ -23,7 +14,28 @@ namespace EventDressApp.MVVM.View
         public InventarioView()
         {
             InitializeComponent();
+            LoadInventoryData();
         }
 
+        private void LoadInventoryData()
+        {
+            try
+            {
+                // Llamamos al stored procedure 'ObtenerTrajes'
+                DataTable dataTable = DatabaseHelper.Instance.ExecuteStoredProcedureWithResults("ObtenerTrajes");
+
+                // Establecemos los datos en el DataGrid
+                InventarioDG.ItemsSource = dataTable.DefaultView;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los datos del inventario: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Aquí puedes agregar lógica para manejar la selección de filas si es necesario
+        }
     }
 }

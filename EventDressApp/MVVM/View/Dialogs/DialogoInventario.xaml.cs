@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using Microsoft.Data.SqlClient;
 using EventDressApp.MVVM.Model;
 using EventDressApp.MVVM.ViewModel.DialogViewModels;
+using System.Data;
 
 namespace EventDressApp.MVVM.View.Dialogs
 {
@@ -13,6 +14,44 @@ namespace EventDressApp.MVVM.View.Dialogs
             InitializeComponent();
             DataContext = new DialogoInventarioViewModel(traje);
             Owner = Application.Current.MainWindow;
+            LoadCategorias();
+            LoadMarcas();
+        }
+
+        private void LoadCategorias()
+        {
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener las categorías
+                DataTable dataTable = DatabaseHelper.Instance.ExecuteStoredProcedureWithResults("ObtenerCategorias");
+
+                // Asignar los datos al ComboBox
+                CategoriasCB.ItemsSource = dataTable.DefaultView;
+                CategoriasCB.DisplayMemberPath = "nombre_categoria"; // Nombre de la columna que se muestra
+                CategoriasCB.SelectedValuePath = "categoria_id"; // Valor asociado a cada ítem
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar las categorías: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LoadMarcas()
+        {
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener las marcas
+                DataTable dataTable = DatabaseHelper.Instance.ExecuteStoredProcedureWithResults("ObtenerMarcas");
+
+                // Asignar los datos al ComboBox de Marcas
+                MarcasCB.ItemsSource = dataTable.DefaultView;
+                MarcasCB.DisplayMemberPath = "nombre_marca"; // Nombre de la columna que se muestra
+                MarcasCB.SelectedValuePath = "marca_id"; // Valor asociado a cada ítem
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar las marcas: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Save_clothing_item(object sender, RoutedEventArgs e)
@@ -26,7 +65,7 @@ namespace EventDressApp.MVVM.View.Dialogs
             string tallaTraje = ((ComboBoxItem)TallaCB.SelectedItem).Content.ToString();
             string colorTraje = ColorTrajeTB.Text;
             decimal precioDiarioTraje = Convert.ToDecimal(PrecioDiarioTB.Text);
-            string estadoTraje = ((ComboBoxItem)EstadoCB.SelectedItem).Content.ToString();
+            //string estadoTraje = ((ComboBoxItem)EstadoCB.SelectedItem).Content.ToString();
             string rutaImagenTraje = RutaImagenTB.Text;
 
             // Valores adicionales
@@ -48,7 +87,7 @@ namespace EventDressApp.MVVM.View.Dialogs
                     new SqlParameter("@TallaPrenda", tallaTraje),
                     new SqlParameter("@ColorPrenda", colorTraje),
                     new SqlParameter("@PrecioDiarioPrenda", precioDiarioTraje),
-                    new SqlParameter("@EstadoPrenda", estadoTraje),
+                    new SqlParameter("@EstadoPrenda", "Disponible"),
                     new SqlParameter("@RutaImagenPrenda", rutaImagenTraje),
                     new SqlParameter("@CantidadTotal", cantidadTotal),
                     new SqlParameter("@CantidadReservada", cantidadReservada),
@@ -65,6 +104,11 @@ namespace EventDressApp.MVVM.View.Dialogs
             {
                 MessageBox.Show($"Error al agregar la prenda: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void CategoriasCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
