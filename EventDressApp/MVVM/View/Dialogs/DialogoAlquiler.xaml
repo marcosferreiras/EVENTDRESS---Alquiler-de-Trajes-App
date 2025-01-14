@@ -1,0 +1,65 @@
+﻿<Window x:Class="EventDressApp.MVVM.View.Dialogs.DialogoAlquiler"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="DialogoAlquiler" Height="500" Width="900">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Título -->
+        <Label Content="Selección de prendas y facturación"
+               Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+               HorizontalAlignment="Center" VerticalAlignment="Top"
+               FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <!-- Barra de búsqueda -->
+        <Label Content="Buscar:" HorizontalAlignment="Left" Grid.Row="1"
+               VerticalAlignment="Center" FontWeight="Bold" FontSize="16"/>
+        <TextBox x:Name="filterTB" Grid.Row="1"
+                 VerticalAlignment="Center" Height="30"
+                 TextWrapping="Wrap" TextChanged="FilterTB_TextChanged"
+                 HorizontalAlignment="Left" Width="438" Margin="72,0,0,0"/>
+
+        <!-- Tabla de datos -->
+        <DataGrid x:Name="InventarioDG"
+                  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="False" Margin="0,10,0,10"
+                  SelectionMode="Extended"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="Seleccionar" Binding="{Binding IsSelected}" Width="Auto"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding prenda_id}" Width="Auto" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Categoría" Binding="{Binding nombre_categoria}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Marca" Binding="{Binding nombre_marca}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Nombre" Binding="{Binding nombre_prenda}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Descripción" Binding="{Binding descripcion_prenda}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Género" Binding="{Binding genero_prenda}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Talla" Binding="{Binding talla_prenda}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Color" Binding="{Binding color_prenda}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Precio Diario" Binding="{Binding precio_diario_prenda}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Estado" Binding="{Binding estado_prenda}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Imagen" Binding="{Binding ruta_imagen_prenda}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Total" Binding="{Binding cantidad_total}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Total alquilados" Binding="{Binding cantidad_alquilada}" Width="*" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Botones de acción -->
+        <Button Content="Cancelar" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Height="40" Margin="426,0,10,0"/>
+        <Button x:Name="FacturarBtn" Content="Facturar selección" Grid.Row="3" Grid.Column="1"
+                HorizontalAlignment="Left" VerticalAlignment="Center"
+                Width="151" Height="40" Margin="10,0,0,0" Click="GenerateInvoice"/>
+    </Grid>
+</Window>

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using EventDressApp.MVVM.Model;
 using EventDressApp.MVVM.View.Dialogos;
+using EventDressApp.MVVM.View.Dialogs;
 using Microsoft.Data.SqlClient;
 
 namespace EventDressApp.MVVM.View
@@ -86,6 +87,13 @@ namespace EventDressApp.MVVM.View
                 // Manejar cualquier error
                 MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void add_suit_Click(object sender, RoutedEventArgs e)
+        {
+            var dialogo = new DialogoInventario();
+            dialogo.ShowDialog();
+            LoadInventoryData();
         }
     }
 }
