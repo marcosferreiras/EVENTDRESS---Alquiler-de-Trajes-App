@@ -83,7 +83,7 @@ namespace EventDressApp.MVVM.ViewModel.DialogViewModels
                 Traje.CategoriaId == 0 ||
                 Traje.PrecioDiarioTraje <= 0)
             {
-                MessageBox.Show("Por favor complete todos los campos obligatorios");
+                //MessageBox.Show("Por favor complete todos los campos obligatorios");
                 return;
             }
 

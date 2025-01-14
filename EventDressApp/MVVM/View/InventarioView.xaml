@@ -56,7 +56,7 @@
         <!-- Botones de Acción -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button x:Name="add_suit" Content="Agregar" 
-                    Margin="0,0,10,0"/>
+                    Margin="0,0,10,0" Click="add_suit_Click"/>
             <Button Content="Editar"
                     Margin="0,0,10,0"
                     IsEnabled="{Binding modeloSeleccionado, Converter={StaticResource NullToBooleanConverter}}"/>
