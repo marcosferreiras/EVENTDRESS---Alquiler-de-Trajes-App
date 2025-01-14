@@ -36,16 +36,13 @@
                          Margin="0,0,0,5"/>
                 <TextBox x:Name="txtUsername" 
                        Height="40" 
-                       Margin="0,0,0,20"
-                       Style="{StaticResource FormTextboxTheme}"/>
+                       Margin="0,0,0,20"/>
 
                 <TextBlock Text="Contraseña" 
                          Margin="0,0,0,5"/>
                 <PasswordBox x:Name="txtPassword" 
                           Height="40" 
-                          Margin="0,0,0,20"
-                          Style="{StaticResource FormPasswordBoxTheme}"
-                             />
+                          Margin="0,0,0,20"/>
 
                 <Button x:Name="btnLogin" 
                         Content="Ingresar" 

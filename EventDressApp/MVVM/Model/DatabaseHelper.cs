@@ -9,10 +9,9 @@ namespace EventDressApp.MVVM.Model
     {
         private static DatabaseHelper _instance;
         private readonly SqlConnection _connection;
-        private readonly string _connectionString = "Server=MARCOS-FERREIRA\\MSSQLSERVER01;Database=EVENTDRESS;Trusted_Connection=True; Encrypt=False;";
+        private readonly string _connectionString = "Server=MARCOS-FERREIRA;Database=EVENTDRESS;Trusted_Connection=True; Encrypt=False;";
 
-        // Singleton pattern to ensure a single instance of DatabaseHelper
-        public static DatabaseHelper Instance   
+        public static DatabaseHelper Instance
         {
             get
             {
@@ -24,13 +23,11 @@ namespace EventDressApp.MVVM.Model
             }
         }
 
-        // Private constructor to prevent external instantiation
         private DatabaseHelper()
         {
             _connection = new SqlConnection(_connectionString);
         }
 
-        // Open database connection
         private void OpenConnection()
         {
             if (_connection.State == ConnectionState.Closed)
@@ -39,7 +36,6 @@ namespace EventDressApp.MVVM.Model
             }
         }
 
-        // Close database connection
         private void CloseConnection()
         {
             if (_connection.State == ConnectionState.Open)
@@ -49,13 +45,14 @@ namespace EventDressApp.MVVM.Model
         }
 
         // Execute a SELECT query and return a DataTable
-        public DataTable ExecuteQuery(string query, SqlParameter[] parameters = null)
+        public DataTable ExecuteQuery(string query, SqlParameter[] parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
                 OpenConnection();
                 using (SqlCommand command = new SqlCommand(query, _connection))
                 {
+                    command.CommandType = commandType;
                     if (parameters != null)
                     {
                         command.Parameters.AddRange(parameters);
@@ -79,7 +76,6 @@ namespace EventDressApp.MVVM.Model
             }
         }
 
-        // Execute a query (INSERT, UPDATE, DELETE) that doesn't return data
         public int ExecuteNonQuery(string query, SqlParameter[] parameters = null, CommandType commandType = CommandType.Text)
         {
             try
@@ -87,7 +83,7 @@ namespace EventDressApp.MVVM.Model
                 OpenConnection();
                 using (SqlCommand command = new SqlCommand(query, _connection))
                 {
-                    command.CommandType = commandType;  // Can be stored procedure or raw SQL
+                    command.CommandType = commandType;
                     if (parameters != null)
                     {
                         command.Parameters.AddRange(parameters);
@@ -106,31 +102,28 @@ namespace EventDressApp.MVVM.Model
             }
         }
 
-        // Execute a stored procedure (with parameters) and return the number of affected rows
         public int ExecuteStoredProcedure(string storedProcedureName, SqlParameter[] parameters = null)
         {
             return ExecuteNonQuery(storedProcedureName, parameters, CommandType.StoredProcedure);
         }
 
-        // Execute a stored procedure and return a DataTable (useful for SELECT operations in procedures)
+        // Método corregido para ejecutar stored procedures que retornan resultados
         public DataTable ExecuteStoredProcedureWithResults(string storedProcedureName, SqlParameter[] parameters = null)
         {
-            return ExecuteQuery(storedProcedureName, parameters);
+            return ExecuteQuery(storedProcedureName, parameters, CommandType.StoredProcedure);
         }
 
-        // Retrieve all records from a specific table
         public DataTable GetAllRecords(string tableName)
         {
             string query = $"SELECT * FROM {tableName}";
             return ExecuteQuery(query);
         }
 
-        // A more generic method to execute queries that return a list of custom objects
-        public List<T> ExecuteQueryToList<T>(string query, SqlParameter[] parameters = null)
+        public List<T> ExecuteQueryToList<T>(string query, SqlParameter[] parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
-                DataTable dataTable = ExecuteQuery(query, parameters);
+                DataTable dataTable = ExecuteQuery(query, parameters, commandType);
                 List<T> resultList = new List<T>();
 
                 foreach (DataRow row in dataTable.Rows)

@@ -20,10 +20,19 @@ namespace EventDressApp.Views
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            string username = txtUsername.Text;
-            string password = txtPassword.Password;
+            string username = txtUsername.Text.Trim(); // Agregamos Trim() para eliminar espacios
+            string password = txtPassword.Password.Trim();
 
-            
+            MessageBox.Show($"Username: [{username}] Password: [{password}]");
+
+            // Verificar que los campos no estén vacíos
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                txtError.Text = "Por favor ingrese usuario y contraseña";
+                return;
+            }
+
+            MessageBox.Show($"Intentando validar:\nUsuario: {username} - Contraseña: {password}");
 
             try
             {
@@ -41,22 +50,52 @@ namespace EventDressApp.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al intentar iniciar sesión: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error al intentar iniciar sesión: " + ex.Message,
+                               "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private bool ValidateUser(string username, string password)
         {
-            string hashedPassword = HashPassword(password);
             try
             {
+                // Debug: Mostrar los valores que se están enviando
+                MessageBox.Show($"Intentando login con:\nUsuario: {username}\nContraseña: {password}");
+
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Username", username),
-                    new SqlParameter("@Password", hashedPassword)
+            new SqlParameter
+            {
+                ParameterName = "@Username",
+                SqlDbType = SqlDbType.VarChar,
+                Size = 50,
+                Value = username
+            },
+            new SqlParameter
+            {
+                ParameterName = "@Password",
+                SqlDbType = SqlDbType.VarChar,
+                Size = 256,
+                Value = password
+            }
                 };
 
                 DataTable result = _db.ExecuteStoredProcedureWithResults("SP_ValidarUsuario", parameters);
+
+                // Debug: Mostrar información sobre el resultado
+                if (result != null)
+                {
+                    MessageBox.Show($"Filas retornadas: {result.Rows.Count}");
+                    if (result.Rows.Count > 0)
+                    {
+                        string estado = result.Rows[0]["estado_usuario"]?.ToString();
+                        MessageBox.Show($"Estado del usuario: {estado}");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("El resultado es null");
+                }
 
                 if (result != null && result.Rows.Count > 0)
                 {
@@ -79,6 +118,7 @@ namespace EventDressApp.Views
             }
             catch (Exception ex)
             {
+                MessageBox.Show($"Error detallado: {ex.Message}\nStack Trace: {ex.StackTrace}");
                 throw new Exception("Error al validar usuario: " + ex.Message, ex);
             }
         }
