@@ -3,18 +3,18 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using EventDressApp.MVVM.Model;
+using EventDressApp.MVVM.View.Dialogos;
+using Microsoft.Data.SqlClient;
 
 namespace EventDressApp.MVVM.View
 {
-    /// <summary>
-    /// Lógica de interacción para InventarioView.xaml
-    /// </summary>
     public partial class InventarioView : UserControl
     {
         public InventarioView()
         {
             InitializeComponent();
             LoadInventoryData();
+            Eliminar_traje_btn.IsEnabled = false;
         }
 
         private void LoadInventoryData()
@@ -33,9 +33,59 @@ namespace EventDressApp.MVVM.View
             }
         }
 
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void InventarioDG_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Aquí puedes agregar lógica para manejar la selección de filas si es necesario
+            Eliminar_traje_btn.IsEnabled = true;
+
+        }
+
+        private void Eliminar_traje_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Verificar si hay un cliente seleccionado
+                DataRowView selectedRow = InventarioDG.SelectedItem as DataRowView;
+                if (selectedRow != null)
+                {
+                    int clienteId = Convert.ToInt32(selectedRow["prenda_id"]);
+
+                    // Mostrar el pop-up de confirmación
+                    var dialogo = new DialogoConfirmacionEliminar();
+                    dialogo.ShowDialog(); // Abrir el pop-up
+
+                    // Si el usuario confirma, eliminar el cliente
+                    if (dialogo.ConfirmacionExitosa)
+                    {
+                        // Crear el parámetro para el procedimiento almacenado
+                        SqlParameter[] parameters = new SqlParameter[] {
+                    new SqlParameter("@prenda_id", SqlDbType.Int) { Value = clienteId }
+                };
+
+                        // Ejecutar el procedimiento almacenado para eliminar al cliente
+                        int rowsAffected = DatabaseHelper.Instance.ExecuteStoredProcedure("EliminarPrenda", parameters);
+
+                        // Verificar si el cliente fue eliminado exitosamente
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Prenda eliminada exitosamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                            LoadInventoryData(); // Recargar la lista de clientes después de eliminar
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo eliminar la prenda. Puede que no exista.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Por favor, selecciona un cliente para eliminar.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejar cualquier error
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

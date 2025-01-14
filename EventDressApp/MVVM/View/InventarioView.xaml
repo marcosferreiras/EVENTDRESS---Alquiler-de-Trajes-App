@@ -7,6 +7,7 @@
              xmlns:viewModel="clr-namespace:EventDressApp.MVVM.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <UserControl.DataContext>
         <viewModel:InventarioViewModel/>
     </UserControl.DataContext>
@@ -28,16 +29,20 @@
         </StackPanel>
 
         <!-- Lista de Trajes -->
-        <DataGrid x:Name="InventarioDG" Grid.Row="1" ItemsSource="{Binding modelo}" SelectedItem="{Binding modeloSeleccionado}"
-                  AutoGenerateColumns="False" IsReadOnly="True" Margin="10" SelectionChanged="DataGrid_SelectionChanged">
-            
+        <DataGrid x:Name="InventarioDG" Grid.Row="1" 
+                  ItemsSource="{Binding modelo}" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True" 
+                  Margin="10" 
+                  SelectionChanged="InventarioDG_SelectionChanged">
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding prenda_id}" Width="Auto"/>
                 <DataGridTextColumn Header="Categoría" Binding="{Binding nombre_categoria}" Width="*"/>
                 <DataGridTextColumn Header="Marca" Binding="{Binding nombre_marca}" Width="*"/>
                 <DataGridTextColumn Header="Nombre" Binding="{Binding nombre_prenda}" Width="*"/>
                 <DataGridTextColumn Header="Descripción" Binding="{Binding descripcion_prenda}" Width="*"/>
-                <DataGridTextColumn Header="Genero" Binding="{Binding genero_prenda}" Width="*"/>
+                <DataGridTextColumn Header="Género" Binding="{Binding genero_prenda}" Width="*"/>
                 <DataGridTextColumn Header="Talla" Binding="{Binding talla_prenda}" Width="*"/>
                 <DataGridTextColumn Header="Color" Binding="{Binding color_prenda}" Width="*"/>
                 <DataGridTextColumn Header="Precio Diario" Binding="{Binding precio_diario_prenda}" Width="*"/>
@@ -51,15 +56,11 @@
         <!-- Botones de Acción -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button x:Name="add_suit" Content="Agregar" 
-                    Command="{Binding AgregarmodeloCommand}"
                     Margin="0,0,10,0"/>
-            <Button Content="Editar" 
-                    Command="{Binding EditarmodeloCommand}"
+            <Button Content="Editar"
+                    Margin="0,0,10,0"
                     IsEnabled="{Binding modeloSeleccionado, Converter={StaticResource NullToBooleanConverter}}"/>
-            <Button Content="Eliminar" 
-                    Command="{Binding EliminarmodeloCommand}"
-                    Margin="10,0,0,0"
-                    IsEnabled="{Binding modeloSeleccionado, Converter={StaticResource NullToBooleanConverter}}"/>
+            <Button x:Name="Eliminar_traje_btn" Content="Eliminar" Click="Eliminar_traje_btn_Click" />
         </StackPanel>
     </Grid>
 </UserControl>
