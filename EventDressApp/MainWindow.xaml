@@ -12,9 +12,7 @@
         Background="Transparent"
         AllowsTransparency="True"
         >
-    <Window.DataContext>
-        <viewModel:MainViewModel />
-    </Window.DataContext>
+   
 
         <Border Background="#f2f1f6" CornerRadius="20">
         <Grid>
@@ -75,8 +73,8 @@
                      HorizontalAlignment="Left"
                      Margin="5"
                      Grid.Column="1"
-                     Style="{StaticResource TextboxTheme}" TextChanged="TextBox_TextChanged"
-                     />
+                     Style="{StaticResource SearchTextboxTheme}" 
+                     TextChanged="TextBox_TextChanged"/>
 
             <ContentControl Grid.Row="1"
                             Grid.Column="1"

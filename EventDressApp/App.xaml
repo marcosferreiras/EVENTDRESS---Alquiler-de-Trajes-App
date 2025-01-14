@@ -4,8 +4,7 @@
              xmlns:local="clr-namespace:EventDressApp"
              xmlns:converters="clr-namespace:EventDressApp.Converters"
              xmlns:viewModel="clr-namespace:EventDressApp.MVVM.ViewModel"
-             xmlns:view="clr-namespace:EventDressApp.MVVM.View"
-             StartupUri="MainWindow.xaml">
+             xmlns:view="clr-namespace:EventDressApp.MVVM.View">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
