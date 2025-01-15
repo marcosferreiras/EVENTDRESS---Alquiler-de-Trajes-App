@@ -45,12 +45,10 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button x:Name="AddClientBtn" Content="Agregar" 
                     Margin="0,0,10,0" Click="Add_Client_Button_Click"/>
-            <Button Content="Editar" 
-                    Margin="0,0,10,0"/>
+            <Button x:Name="EditarClienteBtn" Content="Editar" 
+                    Margin="0,0,10,0" Click="EditarClienteBtn_Click"/>
             <Button x:Name="AlquilarBtn" Content="Alquilar" 
                     Margin="0,0,10,0" Click="AlquilarBtn_click"/>
-            <Button Content="Ver Detalles" 
-                    Margin="0,0,10,0"/>
             <Button x:Name="DeleteClientBtn" Content="Eliminar" 
                 Click="DeleteClientBtn_Click"/>
         </StackPanel>

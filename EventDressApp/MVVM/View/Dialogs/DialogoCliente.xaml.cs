@@ -1,60 +1,152 @@
 ﻿using System;
-using Microsoft.Data.SqlClient;
+using System.Data;
 using System.Windows;
+using Microsoft.Data.SqlClient;
 using EventDressApp.MVVM.Model;
-using EventDressApp.MVVM.ViewModel.DialogViewModels;
 
 namespace EventDressApp.MVVM.View.Dialogs
 {
     public partial class DialogoCliente : Window
     {
-        public DialogoCliente(Clientes cliente = null)
+        private bool _esEdicion;
+        private int _clienteID;
+
+        public DialogoCliente(int? clienteID = null)
         {
             InitializeComponent();
-            DataContext = new DialogoClienteViewModel(cliente);
             Owner = Application.Current.MainWindow;
+
+            if (clienteID.HasValue)
+            {
+                _esEdicion = true;
+                _clienteID = clienteID.Value;
+
+                // Cargar datos del cliente desde la base de datos
+                CargarCliente(_clienteID);
+            }
+            else
+            {
+                _esEdicion = false; // Nuevo cliente
+            }
+        }
+
+        private void CargarCliente(int clienteID)
+        {
+            try
+            {
+                // Llamar al procedimiento almacenado
+                SqlParameter[] parameters = {
+                    new SqlParameter("@ClienteID", clienteID)
+                };
+                DataTable clienteData = DatabaseHelper.Instance.ExecuteStoredProcedureWithResults("ObtenerClientePorID", parameters);
+
+                if (clienteData.Rows.Count > 0)
+                {
+                    // Mapear datos al formulario
+                    DataRow cliente = clienteData.Rows[0];
+                    NombreClienteTB.Text = cliente["Nombre"].ToString();
+                    ApellidoClienteTB.Text = cliente["Apellido"].ToString();
+                    DocumentoClienteTB.Text = cliente["Documento"].ToString();
+                    DireccionClienteTB.Text = cliente["Direccion"].ToString();
+                    TelefonoClienteTB.Text = cliente["Telefono"].ToString();
+                    EmailClienteTB.Text = cliente["Email"].ToString();
+                }
+                else
+                {
+                    MessageBox.Show("No se encontró el cliente con el ID especificado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los datos del cliente: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void CrearCliente(object sender, RoutedEventArgs e)
         {
-            // Obtener valores desde los TextBox
-            string nombreClienteValue = NombreClienteTB.Text;
-            string apellidoClienteValue = ApellidoClienteTB.Text;
-            string documentoClienteValue = DocumentoClienteTB.Text;
-            string direccionClienteValue = DireccionClienteTB.Text;
-            string telefonoClienteValue = TelefonoClienteTB.Text;
-            string emailClienteValue = EmailClienteTB.Text;
+            string nombreCliente = NombreClienteTB.Text;
+            string apellidoCliente = ApellidoClienteTB.Text;
+            string documentoCliente = DocumentoClienteTB.Text;
+            string direccionCliente = DireccionClienteTB.Text;
+            string telefonoCliente = TelefonoClienteTB.Text;
+            string emailCliente = EmailClienteTB.Text;
 
-            // Otros valores fijos o generados
-            DateTime fechaUltimoAlquiler = DateTime.Today; // Nuevo cliente, sin alquileres previos
-            int totalAlquileres = 0;                       // Nuevo cliente
-            string estadoCliente = "Activo";              // Estado inicial
+            if (string.IsNullOrWhiteSpace(nombreCliente) ||
+                string.IsNullOrWhiteSpace(apellidoCliente) ||
+                string.IsNullOrWhiteSpace(documentoCliente))
+            {
+                MessageBox.Show("Por favor, complete todos los campos obligatorios.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             try
             {
-                // Crear los parámetros para el procedimiento almacenado sin ternarios ni verificaciones
-                SqlParameter[] parameters = new SqlParameter[]
+                if (_esEdicion)
                 {
-                    new SqlParameter("@NombreCliente", nombreClienteValue),
-                    new SqlParameter("@ApellidoCliente", apellidoClienteValue),
-                    new SqlParameter("@FechaUltimoAlquiler", fechaUltimoAlquiler),
-                    new SqlParameter("@TotalAlquileres", totalAlquileres),
-                    new SqlParameter("@DocumentoCliente", documentoClienteValue),
-                    new SqlParameter("@DireccionCliente", direccionClienteValue),
-                    new SqlParameter("@TelefonoCliente", telefonoClienteValue),
-                    new SqlParameter("@EmailCliente", emailClienteValue),
-                    new SqlParameter("@EstadoCliente", estadoCliente)
-                };
+                    // Editar cliente existente
+                    EditarCliente(_clienteID, nombreCliente, apellidoCliente, documentoCliente, direccionCliente, telefonoCliente, emailCliente);
+                }
+                else
+                {
+                    // Crear nuevo cliente
+                    InsertarCliente(nombreCliente, apellidoCliente, documentoCliente, direccionCliente, telefonoCliente, emailCliente);
+                }
 
-                // Usar el DatabaseHelper singleton para ejecutar el procedimiento almacenado
-                DatabaseHelper.Instance.ExecuteStoredProcedure("InsertarCliente", parameters);
-
-                MessageBox.Show("Cliente agregado exitosamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Operación completada con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al agregar el cliente: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error al guardar los datos del cliente: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void EditarCliente(int clienteID, string nombre, string apellido, string documento, string direccion, string telefono, string email)
+        {
+            try
+            {
+                SqlParameter[] parameters = {
+                    new SqlParameter("@ClienteID", clienteID),
+                    new SqlParameter("@NombreCliente", nombre),
+                    new SqlParameter("@ApellidoCliente", apellido),
+                    new SqlParameter("@DocumentoCliente", documento),
+                    new SqlParameter("@DireccionCliente", direccion),
+                    new SqlParameter("@TelefonoCliente", telefono),
+                    new SqlParameter("@EmailCliente", email)
+                };
+
+                DatabaseHelper.Instance.ExecuteStoredProcedure("ActualizarCliente", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al editar el cliente: {ex.Message}");
+            }
+        }
+
+        private void InsertarCliente(string nombre, string apellido, string documento, string direccion, string telefono, string email)
+        {
+            try
+            {
+                SqlParameter[] parameters = {
+                    new SqlParameter("@NombreCliente", nombre),
+                    new SqlParameter("@ApellidoCliente", apellido),
+                    new SqlParameter("@DocumentoCliente", documento),
+                    new SqlParameter("@DireccionCliente", direccion),
+                    new SqlParameter("@TelefonoCliente", telefono),
+                    new SqlParameter("@EmailCliente", email)
+                };
+
+                DatabaseHelper.Instance.ExecuteStoredProcedure("InsertarCliente", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al insertar el cliente: {ex.Message}");
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -23,6 +23,7 @@ namespace EventDressApp.MVVM.View
         {
             DeleteClientBtn.IsEnabled = false; // Deshabilitar el botón de eliminar por defecto
             AlquilarBtn.IsEnabled = false; // Deshabilitar el botón de alquilar por defecto
+            EditarClienteBtn.IsEnabled = false; // Deshabilitar el botón de editar por defecto
 
             try
             {
@@ -44,6 +45,7 @@ namespace EventDressApp.MVVM.View
             // Habilitar el botón si hay elementos seleccionados
             DeleteClientBtn.IsEnabled = true;
             AlquilarBtn.IsEnabled = true;
+            EditarClienteBtn.IsEnabled = true;
         }
 
         // Evento para manejar el clic del botón "Eliminar Cliente"
@@ -128,6 +130,31 @@ namespace EventDressApp.MVVM.View
             else
             {
                 MessageBox.Show("Por favor, selecciona un cliente antes de alquilar.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void EditarClienteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Verificar si se seleccionó un cliente en el DataGrid
+                if (ClientesDGV.SelectedItem is DataRowView selectedRow)
+                {
+                    // Obtener el ID del cliente de la fila seleccionada
+                    int clienteID = Convert.ToInt32(selectedRow["cliente_id"]);
+
+                    // Abrir el diálogo de edición con el ID del cliente seleccionado
+                    DialogoCliente dialogo = new DialogoCliente(clienteID);
+                    dialogo.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Seleccione un cliente para editar.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocurrió un error al intentar editar el cliente: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

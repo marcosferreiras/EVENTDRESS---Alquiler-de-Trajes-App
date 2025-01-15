@@ -94,13 +94,13 @@ namespace EventDressApp.MVVM.ViewModel
 
         private void EditarCliente(object obj)
         {
-            var dialog = new DialogoCliente(ClienteSeleccionado);
-            if (dialog.ShowDialog() == true)
-            {
+            //var dialog = new DialogoCliente(ClienteSeleccionado);
+            //if (dialog.ShowDialog() == true)
+            //{
                 // TODO: Actualizar en la base de datos
-                var clienteActualizado = ((DialogoClienteViewModel)dialog.DataContext).Cliente;
+                //var clienteActualizado = ((DialogoClienteViewModel)dialog.DataContext).Cliente;
                 // Actualizar propiedades
-            }
+            //}
         }
 
         private bool CanEditarCliente(object obj)
