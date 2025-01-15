@@ -146,6 +146,7 @@ namespace EventDressApp.MVVM.View
                     // Abrir el diálogo de edición con el ID del cliente seleccionado
                     DialogoCliente dialogo = new DialogoCliente(clienteID);
                     dialogo.ShowDialog();
+                    LoadClientesData();
                 }
                 else
                 {

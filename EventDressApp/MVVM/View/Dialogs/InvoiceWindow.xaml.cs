@@ -80,7 +80,7 @@ namespace EventDressApp.MVVM.View.Dialogs
                 var parameters = new[]
                 {
                     new SqlParameter("@ClienteID", SqlDbType.Int) { Value = _clienteId },
-                    new SqlParameter("@UsuarioID", SqlDbType.Int) { Value = 9 }, // Cambiar por el ID del usuario actual
+                    new SqlParameter("@UsuarioID", SqlDbType.Int) { Value = 7 }, // Cambiar por el ID del usuario actual
                     new SqlParameter("@FechaInicio", SqlDbType.DateTime) { Value = DateTime.Now },
                     new SqlParameter("@FechaDevolucion", SqlDbType.DateTime) { Value = DateTime.Now.AddDays(7) },
                     new SqlParameter("@DetallesReservas", SqlDbType.NVarChar) { Value = detallesJson }
