@@ -32,7 +32,7 @@ namespace EventDressApp.MVVM.Model
         public string EmailUsuario { get => emailusuario; set { if (emailusuario != value) { emailusuario = value; OnPropertyChanged(); } } }
         public string TelefonoUsuario { get => telefonousuario; set { if (telefonousuario != value) { telefonousuario = value; OnPropertyChanged(); } } }
         public string DocumentoUsuario { get => documentousuario; set { if (documentousuario != value) { documentousuario = value; OnPropertyChanged(); } } }
-        public string DescripcionUsuario { get => descripcionusuario; set { if (descripcionusuario != value) { descripcionusuario = value; OnPropertyChanged(); } } }
+        public string DireccionUsuario { get => descripcionusuario; set { if (descripcionusuario != value) { descripcionusuario = value; OnPropertyChanged(); } } }
         public DateTime FechaContratacion { get => fechacontratacion; set { if (fechacontratacion != value) { fechacontratacion = value; OnPropertyChanged(); } } }
         public string EstadoUsuario { get => estadousuario; set { if (estadousuario != value) { estadousuario = value; OnPropertyChanged(); } } }
         public DateTime UltimaSesionUsuario { get => ultimasesionusuario; set { if (ultimasesionusuario != value) { ultimasesionusuario = value; OnPropertyChanged(); } } }

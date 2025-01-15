@@ -13,34 +13,38 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <!-- User Details Section -->
         <ScrollViewer Grid.Row="1">
             <StackPanel Grid.Row="0" Margin="10">
-                <TextBlock Text="Nombre" Margin="0,5"/>
-                <TextBox Text="{Binding Usuario.NombreUsuario}" Margin="0,5"/>
+                <TextBlock Text="Nombre *" Margin="0,5"/>
+                <TextBox Text="{Binding Usuario.NombreUsuario, UpdateSourceTrigger=PropertyChanged}" Margin="0,5"/>
                 <TextBlock Text="Apellido" Margin="0,5"/>
                 <TextBox Text="{Binding Usuario.ApellidoUsuario}" Margin="0,5"/>
-                <TextBlock Text="Username" Margin="0,5"/>
-                <TextBox Text="{Binding Usuario.UsernameUsuario}" Margin="0,5"/>
-                <TextBlock Text="Contraseña" Margin="0,5"/>
-                <PasswordBox Name="PasswordBox" Margin="0,5"/>
+                <TextBlock Text="Username *" Margin="0,5"/>
+                <TextBox Text="{Binding Usuario.UsernameUsuario, UpdateSourceTrigger=PropertyChanged}" Margin="0,5"/>
+                <TextBlock Text="Contraseña *" Margin="0,5"/>
+                <PasswordBox x:Name="PasswordBox" Margin="0,5"/>
                 <TextBlock Text="Email" Margin="0,5"/>
                 <TextBox Text="{Binding Usuario.EmailUsuario}" Margin="0,5"/>
                 <TextBlock Text="Teléfono" Margin="0,5"/>
                 <TextBox Text="{Binding Usuario.TelefonoUsuario}" Margin="0,5"/>
                 <TextBlock Text="Documento" Margin="0,5"/>
                 <TextBox Text="{Binding Usuario.DocumentoUsuario}" Margin="0,5"/>
+                <TextBlock Text="Dirección" Margin="0,5"/>
+                <TextBox Text="{Binding Usuario.DireccionUsuario}" Margin="0,5"/>
+                <TextBlock Text="* Campos obligatorios" Margin="0,10,0,0" FontStyle="Italic"/>
             </StackPanel>
         </ScrollViewer>
-        
+
         <!-- Buttons Section -->
         <StackPanel Grid.Row="2" 
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right"
                     Margin="0,10,0,0">
             <Button Content="Guardar" 
-                    Command="{Binding GuardarCommand}" 
+                    Command="{Binding GuardarCommand}"
+                    CommandParameter="{Binding ElementName=PasswordBox}"
                     Margin="5"/>
             <Button Content="Cancelar" 
                     Command="{Binding CancelarCommand}" 

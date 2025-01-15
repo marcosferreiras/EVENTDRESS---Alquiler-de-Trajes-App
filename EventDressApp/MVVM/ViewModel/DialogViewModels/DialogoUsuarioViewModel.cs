@@ -1,18 +1,21 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using System.Windows;
 using EventDressApp.MVVM.Model;
 using EventDressApp.Helpers;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using Microsoft.Data.SqlClient;
+using System;
+using System.Data;
+using System.Collections.ObjectModel;
+using EventDressApp.MVVM.View.Dialogs;
 
-
-namespace EventDressApp.MVVM.ViewModel.DialogViewModels
+namespace EventDressApp.MVVM.ViewModel
 {
-    public class DialogoUsuarioViewModel : INotifyPropertyChanged
+    public class DialogoUsuarioViewModel : BaseViewModel
     {
         private Usuario _usuario;
-        private string _titulo;
-        private bool _esNuevo;
+        private Window _window;
+        private ObservableCollection<EmpresaItem> _empresas;
+        private EmpresaItem _empresaSeleccionada;
 
         public Usuario Usuario
         {
@@ -20,71 +23,152 @@ namespace EventDressApp.MVVM.ViewModel.DialogViewModels
             set
             {
                 _usuario = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Usuario));
             }
         }
 
-        public string Titulo
+        public ObservableCollection<EmpresaItem> Empresas
         {
-            get => _titulo;
+            get => _empresas;
             set
             {
-                _titulo = value;
-                OnPropertyChanged();
+                _empresas = value;
+                OnPropertyChanged(nameof(Empresas));
+            }
+        }
+
+        public EmpresaItem EmpresaSeleccionada
+        {
+            get => _empresaSeleccionada;
+            set
+            {
+                _empresaSeleccionada = value;
+                OnPropertyChanged(nameof(EmpresaSeleccionada));
             }
         }
 
         public ICommand GuardarCommand { get; }
         public ICommand CancelarCommand { get; }
 
-        public DialogoUsuarioViewModel(Usuario usuario = null)
+        public DialogoUsuarioViewModel(Window window)
         {
-            _esNuevo = usuario == null;
-            Usuario = usuario ?? new Usuario();
-            Titulo = _esNuevo ? "Nuevo Usuario" : "Editar Usuario";
-            GuardarCommand = new RelayCommand(Guardar);
+            _window = window;
+            Usuario = new Usuario();
+            Empresas = new ObservableCollection<EmpresaItem>();
+            GuardarCommand = new RelayCommand(GuardarUsuario, CanGuardarUsuario);
             CancelarCommand = new RelayCommand(Cancelar);
+            CargarEmpresas();
         }
 
-        private void Guardar(object obj)
+        private void CargarEmpresas()
         {
-            if (ValidarDatos())
+            try
             {
-                DialogResult = true;
-                CloseDialog();
+                var dt = DatabaseHelper.Instance.ExecuteQuery("SELECT empresa_id, nombre_empresa FROM Empresa");
+                Empresas.Clear();
+                foreach (DataRow row in dt.Rows)
+                {
+                    Empresas.Add(new EmpresaItem
+                    {
+                        Id = Convert.ToInt32(row["empresa_id"]),
+                        Nombre = row["nombre_empresa"].ToString()
+                    });
+                }
+
+                if (Empresas.Count > 0)
+                    EmpresaSeleccionada = Empresas[0];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar las empresas: {ex.Message}");
             }
         }
 
-        private bool ValidarDatos()
+        private bool CanGuardarUsuario(object parameter)
         {
-            if (string.IsNullOrWhiteSpace(Usuario.NombreUsuario) ||
-                string.IsNullOrWhiteSpace(Usuario.UsernameUsuario) ||
-                string.IsNullOrWhiteSpace(Usuario.ContraseñaUsuario))
+            return !string.IsNullOrWhiteSpace(Usuario.NombreUsuario) &&
+                   !string.IsNullOrWhiteSpace(Usuario.UsernameUsuario) &&
+                   EmpresaSeleccionada != null;
+        }
+
+        private void GuardarUsuario(object parameter)
+        {
+            try
             {
-                MessageBox.Show("Por favor complete los campos obligatorios");
-                return false;
+                var passwordBox = parameter as System.Windows.Controls.PasswordBox;
+                if (passwordBox == null)
+                {
+                    MessageBox.Show("Error: No se pudo obtener la contraseña");
+                    return;
+                }
+
+                if (EmpresaSeleccionada == null)
+                {
+                    MessageBox.Show("Por favor, seleccione una empresa");
+                    return;
+                }
+
+                // Validaciones básicas
+                if (string.IsNullOrWhiteSpace(passwordBox.Password))
+                {
+                    MessageBox.Show("Por favor, ingrese una contraseña");
+                    return;
+                }
+
+                // Crear parámetros para el procedimiento almacenado
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@EmpresaId", SqlDbType.Int) { Value = EmpresaSeleccionada.Id },
+                    new SqlParameter("@RolId", SqlDbType.Int) { Value = 1 }, // Valor por defecto
+                    new SqlParameter("@NombreUsuario", SqlDbType.NVarChar) { Value = Usuario.NombreUsuario },
+                    new SqlParameter("@ApellidoUsuario", SqlDbType.NVarChar) { Value = Usuario.ApellidoUsuario ?? (object)DBNull.Value },
+                    new SqlParameter("@UsernameUsuario", SqlDbType.NVarChar) { Value = Usuario.UsernameUsuario },
+                    new SqlParameter("@ContraseñaUsuario", SqlDbType.NVarChar) { Value = passwordBox.Password },
+                    new SqlParameter("@EmailUsuario", SqlDbType.NVarChar) { Value = Usuario.EmailUsuario ?? (object)DBNull.Value },
+                    new SqlParameter("@TelefonoUsuario", SqlDbType.NVarChar) { Value = Usuario.TelefonoUsuario ?? (object)DBNull.Value },
+                    new SqlParameter("@DocumentoUsuario", SqlDbType.NVarChar) { Value = Usuario.DocumentoUsuario ?? (object)DBNull.Value },
+                    new SqlParameter("@DireccionUsuario", SqlDbType.NVarChar) { Value = Usuario.DireccionUsuario ?? (object)DBNull.Value },
+                    new SqlParameter("@FechaContratacionUsuario", SqlDbType.DateTime) { Value = DateTime.Now },
+                    new SqlParameter("@EstadoUsuario", SqlDbType.Bit) { Value = true },
+                    new SqlParameter("@UltimaSesionUsuario", SqlDbType.DateTime) { Value = DateTime.Now },
+                    new SqlParameter("@IntentosFallidosLoginUsuario", SqlDbType.Int) { Value = 0 }
+                };
+
+                // Ejecutar el procedimiento almacenado
+                DatabaseHelper.Instance.ExecuteStoredProcedure("InsertarUsuario", parameters);
+
+                MessageBox.Show("Usuario creado exitosamente", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Cerrar solo el diálogo
+                if (_window is DialogoUsuario dialogoUsuario)
+                {
+                    dialogoUsuario.DialogResult = true;
+                    dialogoUsuario.Close();
+                }
             }
-            return true;
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al crear el usuario: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private void Cancelar(object obj)
-        {
-            DialogResult = false;
-            CloseDialog();
+        private void Cancelar(object parameter)
+        { 
+            if (_window is DialogoUsuario dialogoUsuario)
+            {
+                dialogoUsuario.DialogResult = false;
+                dialogoUsuario.Close();
+            }
         }
+    }
 
-        private void CloseDialog()
+    public class EmpresaItem
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+
+        public override string ToString()
         {
-            if (System.Windows.Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive) is Window window)
-                window.Close();
-        }
-
-        public bool? DialogResult { get; private set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return Nombre;
         }
     }
 }

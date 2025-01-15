@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System.Data;
 using EventDressApp.MVVM.Model;
 using EventDressApp.Views;
+using EventDressApp.MVVM.View.Dialogs;
 
 namespace EventDressApp
 {
@@ -48,13 +49,22 @@ namespace EventDressApp
                 // Validar y guardar en la base de datos
                 GuardarDatosEmpresa(nombreEmpresa, logoEmpresa, direccionEmpresa, telefonoEmpresa, emailEmpresa, sitioWebEmpresa, fechaRegistroEmpresa);
 
-                // Abrir la ventana de login
-                LoginWindow loginWindow = new LoginWindow();
-                loginWindow.Show();
+                DialogoUsuario dialogoUsuario = new DialogoUsuario();
+                bool? userResult = dialogoUsuario.ShowDialog();
 
-             }
+                // Si la creación de usuario fue exitosa, se va al login
+                if (userResult == true)
+                {
+                    // Abrir la ventana de login
+                    LoginWindow loginWindow = new LoginWindow();
+                    loginWindow.Show();
+                }
 
-            private void GuardarDatosEmpresa(string nombre, string logo, string direccion, string telefono, string email, string sitioWeb, DateTime fechaRegistro)
+                // Cerrar la ventana de configuración
+                //this.Close();
+            }
+
+        private void GuardarDatosEmpresa(string nombre, string logo, string direccion, string telefono, string email, string sitioWeb, DateTime fechaRegistro)
             {
                 // Parámetros para el procedimiento almacenado
                 SqlParameter[] parameters = new SqlParameter[]

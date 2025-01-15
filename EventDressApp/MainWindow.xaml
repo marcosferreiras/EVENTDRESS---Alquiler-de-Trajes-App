@@ -10,56 +10,65 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="Transparent"
-        AllowsTransparency="True"
-        >
-   
+        AllowsTransparency="True">
 
-        <Border Background="#f2f1f6" CornerRadius="20">
+    <Border Background="#f2f1f6" CornerRadius="20">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="75" />
                 <RowDefinition />
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock  Text="EventDress" 
-                        VerticalAlignment="Center" 
-                        HorizontalAlignment="Left" 
-                        Foreground="Black"
-                        FontSize="22"
-                        Margin="20,0,0,0"/>
+            <TextBlock Text="EventDress" 
+                      VerticalAlignment="Center" 
+                      HorizontalAlignment="Left" 
+                      Foreground="Black"
+                      FontSize="22"
+                      Margin="20,0,0,0"/>
 
             <StackPanel Grid.Row="1">
                 <RadioButton Content="Alquiler" 
-                             Height="50" 
-                             Foreground="Black"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" IsChecked="True" Command="{Binding HomeViewCommand}"/>
-
+                           Height="50" 
+                           Foreground="Black"
+                           FontSize="14"
+                           Style="{StaticResource MenuButtonTheme}" 
+                           IsChecked="True" 
+                           Command="{Binding HomeViewCommand}"/>
                 <RadioButton Content="Inventario" 
-                             Height="50"
-                             Foreground="Black"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" 
-                             Command="{Binding InventarioViewCommand}"/>
-
+                           Height="50"
+                           Foreground="Black"
+                           FontSize="14"
+                           Style="{StaticResource MenuButtonTheme}" 
+                           Command="{Binding InventarioViewCommand}"/>
                 <RadioButton Content="Clientes" 
-                             Height="50"
-                             Foreground="Black"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" 
-                             Command="{Binding ClientesViewCommand}"/>    
+                           Height="50"
+                           Foreground="Black"
+                           FontSize="14"
+                           Style="{StaticResource MenuButtonTheme}" 
+                           Command="{Binding ClientesViewCommand}"/>
                 <RadioButton Content="Usuarios" 
-                             Height="50"
-                             Foreground="Black"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}" 
-                             Command="{Binding UsuariosViewCommand}"/>
+                           Height="50"
+                           Foreground="Black"
+                           FontSize="14"
+                           Style="{StaticResource MenuButtonTheme}" 
+                           Command="{Binding UsuariosViewCommand}"/>
             </StackPanel>
+
+            <!-- Botón de Cerrar Sesión -->
+            <Button Grid.Row="1"
+                    VerticalAlignment="Bottom"
+                    Margin="20,0,20,20"
+                    Height="40"
+                    Content="Cerrar Sesión"
+                    Command="{Binding CerrarSesionCommand}"
+                    Style="{StaticResource MenuButtonTheme}"
+                    Background="#FF5252"
+                    Foreground="White"/>
 
             <TextBox Width="250"
                      Height="40"
@@ -71,11 +80,9 @@
                      TextChanged="TextBox_TextChanged"/>
 
             <ContentControl Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="10"
-                            Content="{Binding CurrentView}"
-                            />
-
+                          Grid.Column="1"
+                          Margin="10"
+                          Content="{Binding CurrentView}"/>
         </Grid>
     </Border>
 </Window>
