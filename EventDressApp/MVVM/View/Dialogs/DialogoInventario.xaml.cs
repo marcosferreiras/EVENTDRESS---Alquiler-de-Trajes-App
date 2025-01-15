@@ -65,7 +65,6 @@ namespace EventDressApp.MVVM.View.Dialogs
             string tallaTraje = ((ComboBoxItem)TallaCB.SelectedItem).Content.ToString();
             string colorTraje = ColorTrajeTB.Text;
             decimal precioDiarioTraje = Convert.ToDecimal(PrecioDiarioTB.Text);
-            //string estadoTraje = ((ComboBoxItem)EstadoCB.SelectedItem).Content.ToString();
             string rutaImagenTraje = RutaImagenTB.Text;
 
             // Valores adicionales
@@ -99,11 +98,30 @@ namespace EventDressApp.MVVM.View.Dialogs
                 DatabaseHelper.Instance.ExecuteStoredProcedure("InsertarPrenda", parameters);
 
                 MessageBox.Show("Prenda agregada exitosamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Limpiar los campos del formulario
+                ClearFormFields();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al agregar la prenda: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void ClearFormFields()
+        {
+            // Limpiar los valores de los campos
+            NombreTrajeTB.Text = string.Empty;
+            DescripcionTrajeTB.Text = string.Empty;
+            CategoriasCB.SelectedIndex = -1;
+            MarcasCB.SelectedIndex = -1;
+            GeneroCB.SelectedIndex = -1;
+            TallaCB.SelectedIndex = -1;
+            ColorTrajeTB.Text = string.Empty;
+            PrecioDiarioTB.Text = string.Empty;
+            RutaImagenTB.Text = string.Empty;
+
+            // Opcional: restablecer cualquier validación o estado adicional
         }
 
         private void CategoriasCB_SelectionChanged(object sender, SelectionChangedEventArgs e)

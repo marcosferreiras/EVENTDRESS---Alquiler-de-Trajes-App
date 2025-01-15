@@ -22,6 +22,7 @@ namespace EventDressApp.MVVM.View
         private void LoadClientesData()
         {
             DeleteClientBtn.IsEnabled = false; // Deshabilitar el botón de eliminar por defecto
+            AlquilarBtn.IsEnabled = false; // Deshabilitar el botón de alquilar por defecto
 
             try
             {
@@ -42,6 +43,7 @@ namespace EventDressApp.MVVM.View
         {
             // Habilitar el botón si hay elementos seleccionados
             DeleteClientBtn.IsEnabled = true;
+            AlquilarBtn.IsEnabled = true;
         }
 
         // Evento para manejar el clic del botón "Eliminar Cliente"
@@ -106,6 +108,27 @@ namespace EventDressApp.MVVM.View
             //{
             //    // TODO: Agregar a la base de datos
             //}
+        }
+
+        private void AlquilarBtn_click(object sender, RoutedEventArgs e)
+        {
+            // Verificar si hay un cliente seleccionado
+            DataRowView selectedRow = ClientesDGV.SelectedItem as DataRowView;
+            if (selectedRow != null)
+            {
+                // Obtener información del cliente seleccionado
+                int clienteId = Convert.ToInt32(selectedRow["cliente_id"]);
+                string nombre = selectedRow["nombre_cliente"].ToString();
+                string apellido = selectedRow["apellido_cliente"].ToString();
+
+                // Pasar datos del cliente al constructor de DialogoAlquiler
+                var dialogo = new DialogoAlquiler(clienteId, nombre, apellido);
+                dialogo.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Por favor, selecciona un cliente antes de alquilar.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
     }
 }

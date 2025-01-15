@@ -8,10 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <UserControl.DataContext>
-        <viewModel:ClientesViewModel/>
-    </UserControl.DataContext>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -50,12 +46,10 @@
             <Button x:Name="AddClientBtn" Content="Agregar" 
                     Margin="0,0,10,0" Click="Add_Client_Button_Click"/>
             <Button Content="Editar" 
-                    Command="{Binding EditarClienteCommand}"
-                    IsEnabled="{Binding ClienteSeleccionado, Converter={StaticResource NullToBooleanConverter}}"
                     Margin="0,0,10,0"/>
+            <Button x:Name="AlquilarBtn" Content="Alquilar" 
+                    Margin="0,0,10,0" Click="AlquilarBtn_click"/>
             <Button Content="Ver Detalles" 
-                    Command="{Binding VerDetallesCommand}"
-                    IsEnabled="{Binding ClienteSeleccionado, Converter={StaticResource NullToBooleanConverter}}"
                     Margin="0,0,10,0"/>
             <Button x:Name="DeleteClientBtn" Content="Eliminar" 
                 Click="DeleteClientBtn_Click"/>
