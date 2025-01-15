@@ -14,7 +14,12 @@ namespace EventDressApp.MVVM.View.Dialogs
         public DialogoCliente(int? clienteID = null)
         {
             InitializeComponent();
-            Owner = Application.Current.MainWindow;
+
+            // Establece el owner solo si es diferente de esta ventana
+            if (Application.Current.MainWindow != this)
+            {
+                Owner = Application.Current.MainWindow;
+            }
 
             if (clienteID.HasValue)
             {
@@ -44,6 +49,10 @@ namespace EventDressApp.MVVM.View.Dialogs
                 {
                     // Mapear datos al formulario
                     DataRow cliente = clienteData.Rows[0];
+
+                    // Mostrar datos recuperados en una alerta
+                    MessageBox.Show($"Datos recuperados:\nNombre: {cliente["Nombre"]}\nApellido: {cliente["Apellido"]}\nDocumento: {cliente["Documento"]}\nDireccion: {cliente["Direccion"]}\nTelefono: {cliente["Telefono"]}\nEmail: {cliente["Email"]}", "Datos Recuperados", MessageBoxButton.OK, MessageBoxImage.Information);
+
                     NombreClienteTB.Text = cliente["Nombre"].ToString();
                     ApellidoClienteTB.Text = cliente["Apellido"].ToString();
                     DocumentoClienteTB.Text = cliente["Documento"].ToString();
@@ -84,12 +93,12 @@ namespace EventDressApp.MVVM.View.Dialogs
                 if (_esEdicion)
                 {
                     // Editar cliente existente
-                    EditarCliente(_clienteID, nombreCliente, apellidoCliente, documentoCliente, direccionCliente, telefonoCliente, emailCliente);
+                    EditarCliente(_clienteID, nombreCliente, apellidoCliente, documentoCliente, direccionCliente, telefonoCliente, emailCliente, DateTime.Now, 0);
                 }
                 else
                 {
                     // Crear nuevo cliente
-                    InsertarCliente(nombreCliente, apellidoCliente, documentoCliente, direccionCliente, telefonoCliente, emailCliente);
+                    InsertarCliente(nombreCliente, apellidoCliente, documentoCliente, direccionCliente, telefonoCliente, emailCliente, 0);
                 }
 
                 MessageBox.Show("Operación completada con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -101,7 +110,7 @@ namespace EventDressApp.MVVM.View.Dialogs
             }
         }
 
-        private void EditarCliente(int clienteID, string nombre, string apellido, string documento, string direccion, string telefono, string email)
+        private void EditarCliente(int clienteID, string nombre, string apellido, string documento, string direccion, string telefono, string email, DateTime fechaUltimoAlquiler, int totalAlquileres)
         {
             try
             {
@@ -112,7 +121,10 @@ namespace EventDressApp.MVVM.View.Dialogs
                     new SqlParameter("@DocumentoCliente", documento),
                     new SqlParameter("@DireccionCliente", direccion),
                     new SqlParameter("@TelefonoCliente", telefono),
-                    new SqlParameter("@EmailCliente", email)
+                    new SqlParameter("@EmailCliente", email),
+                    new SqlParameter("@FechaUltimoAlquiler", fechaUltimoAlquiler),
+                    new SqlParameter("@TotalAlquileres", totalAlquileres),
+                    new SqlParameter("@EstadoCliente", "Activo")
                 };
 
                 DatabaseHelper.Instance.ExecuteStoredProcedure("ActualizarCliente", parameters);
@@ -123,17 +135,20 @@ namespace EventDressApp.MVVM.View.Dialogs
             }
         }
 
-        private void InsertarCliente(string nombre, string apellido, string documento, string direccion, string telefono, string email)
+        private void InsertarCliente(string nombre, string apellido, string documento, string direccion, string telefono, string email, int totalAlquileres)
         {
             try
             {
                 SqlParameter[] parameters = {
                     new SqlParameter("@NombreCliente", nombre),
                     new SqlParameter("@ApellidoCliente", apellido),
+                    new SqlParameter("@FechaUltimoAlquiler", DateTime.Now),
+                    new SqlParameter("@TotalAlquileres", totalAlquileres),
                     new SqlParameter("@DocumentoCliente", documento),
                     new SqlParameter("@DireccionCliente", direccion),
                     new SqlParameter("@TelefonoCliente", telefono),
-                    new SqlParameter("@EmailCliente", email)
+                    new SqlParameter("@EmailCliente", email),
+                    new SqlParameter("@EstadoCliente", "Activo")
                 };
 
                 DatabaseHelper.Instance.ExecuteStoredProcedure("InsertarCliente", parameters);
