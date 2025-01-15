@@ -9,7 +9,7 @@ namespace EventDressApp.MVVM.Model
     {
         private static DatabaseHelper _instance;
         private readonly SqlConnection _connection;
-        private readonly string _connectionString = "Server=MARCOS-FERREIRA;Database=EVENTDRESS;Trusted_Connection=True; Encrypt=False;";
+        private readonly string _connectionString = "Server=ALBINSON\\MSSQLSERVER01;Database=EVENTDRESS;Trusted_Connection=True; Encrypt=False;";
 
         public static DatabaseHelper Instance
         {

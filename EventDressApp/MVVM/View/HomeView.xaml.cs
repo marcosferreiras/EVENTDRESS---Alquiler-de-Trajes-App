@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using EventDressApp.MVVM.Model;
 
 namespace EventDressApp.MVVM.View
 {
@@ -23,6 +14,72 @@ namespace EventDressApp.MVVM.View
         public HomeView()
         {
             InitializeComponent();
+            LoadReservasData();
+        }
+
+        private void LoadReservasData()
+        {
+            try
+            {
+                // Llamar al stored procedure usando DatabaseHelper
+                DataTable reservasData = DatabaseHelper.Instance.ExecuteStoredProcedureWithResults("ObtenerReservas");
+
+                // Enlazar los datos al DataGrid
+                ReservasDataGrid.ItemsSource = reservasData.DefaultView;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar las reservas: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        //private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (ReservasDataGrid.SelectedItem != null)
+        //    {
+        //        // Obtener la fila seleccionada
+        //        DataRowView selectedRow = ReservasDataGrid.SelectedItem as DataRowView;
+        //        if (selectedRow != null)
+        //        {
+        //            // Ejemplo de acceso a datos de la fila seleccionada
+        //            string reservaId = selectedRow["reserva_id"].ToString();
+        //            MessageBox.Show($"Reserva seleccionada: {reservaId}", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
+        //        }
+        //    }
+        //}
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (ReservasDataGrid.ItemsSource is DataView dataView)
+                {
+                    string filterText = SearchTextBox.Text.Trim();
+
+                    if (string.IsNullOrEmpty(filterText))
+                    {
+                        // Limpiar el filtro si no hay texto en el cuadro de búsqueda
+                        dataView.RowFilter = string.Empty;
+                    }
+                    else
+                    {
+                        // Escapar caracteres especiales en el filtro
+                        string escapedFilterText = filterText.Replace("'", "''").Replace("[", "[[]").Replace("%", "[%]").Replace("*", "[*]");
+
+                        // Aplicar filtro por ID o nombre
+                        dataView.RowFilter = $"CONVERT([ID Reserva], System.String) LIKE '%{escapedFilterText}%' OR [Cliente] LIKE '%{escapedFilterText}%'";
+                    }
+                }
+                else
+                {
+                    // Manejar casos donde ItemsSource no sea un DataView
+                    MessageBox.Show("La fuente de datos no es válida para aplicar el filtro.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocurrió un error al aplicar el filtro: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

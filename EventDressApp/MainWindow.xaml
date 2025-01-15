@@ -34,7 +34,7 @@
                         Margin="20,0,0,0"/>
 
             <StackPanel Grid.Row="1">
-                <RadioButton Content="Home" 
+                <RadioButton Content="Alquiler" 
                              Height="50" 
                              Foreground="Black"
                              FontSize="14"
@@ -53,12 +53,6 @@
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}" 
                              Command="{Binding ClientesViewCommand}"/>    
-
-                <RadioButton Content="Alquiler" 
-                             Height="50" 
-                             Foreground="Black"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"/>
                 <RadioButton Content="Usuarios" 
                              Height="50"
                              Foreground="Black"

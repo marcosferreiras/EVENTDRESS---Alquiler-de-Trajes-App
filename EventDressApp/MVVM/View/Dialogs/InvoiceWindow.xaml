@@ -9,22 +9,18 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Información del Cliente -->
-        <TextBox x:Name="ClientInfoTextBox" Grid.Row="0" 
-                 Margin="10" IsReadOnly="True" Background="#f0f0f0" 
-                 FontWeight="Bold" TextWrapping="Wrap"/>
+        <TextBox x:Name="ClientInfoTextBox" Grid.Row="0" Margin="10" IsReadOnly="True" 
+                 Background="#f0f0f0" FontWeight="Bold" TextWrapping="Wrap"/>
 
-        <!-- Detalles de la Factura -->
-        <TextBox x:Name="InvoiceTextBox" Grid.Row="1" 
-                 Margin="10" IsReadOnly="True" VerticalScrollBarVisibility="Auto" 
-                 TextWrapping="Wrap"/>
+        <TextBox x:Name="InvoiceTextBox" Grid.Row="1" Margin="10" IsReadOnly="True" 
+                 VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>
 
-        <!-- Botones y Total -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock x:Name="TotalTextBlock" VerticalAlignment="Center" 
                        FontSize="16" FontWeight="Bold" Margin="0,0,20,0"/>
-            <Button x:Name="FacturarBtn" Content="Facturar" Click="PrintInvoice" Width="80" Margin="5,0"/>
-            <Button Content="Cerrar" Click="CloseWindow" Width="80" Margin="5,0"/>
+            <Button x:Name="FacturarBtn" Content="Facturar" Width="80" Margin="5,0" 
+                    Click="PrintInvoice"/>
+            <Button Content="Cerrar" Width="80" Margin="5,0" Click="CloseWindow"/>
         </StackPanel>
     </Grid>
 </Window>

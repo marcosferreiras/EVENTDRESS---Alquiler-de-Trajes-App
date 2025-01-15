@@ -57,9 +57,6 @@
         </DataGrid>
 
         <!-- Botones de acción -->
-        <Button Content="Cancelar" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Height="40" Margin="426,0,10,0"/>
-        <Button x:Name="FacturarBtn" Content="Facturar selección" Grid.Row="3" Grid.Column="1"
-                HorizontalAlignment="Left" VerticalAlignment="Center"
-                Width="151" Height="40" Margin="10,0,0,0" Click="GenerateInvoice"/>
+        <Button x:Name="FacturarBtn" Content="Facturar selección" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Height="40" Margin="132,0,10,0" Click="GenerateInvoice"/>
     </Grid>
 </Window>

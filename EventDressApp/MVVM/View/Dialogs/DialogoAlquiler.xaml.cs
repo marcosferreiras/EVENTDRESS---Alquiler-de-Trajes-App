@@ -25,10 +25,6 @@ namespace EventDressApp.MVVM.View.Dialogs
             _nombreCliente = nombreCliente;
             _apellidoCliente = apellidoCliente;
 
-            // Mostrar alerta con la información del cliente
-            MessageBox.Show($"Cliente seleccionado:\nID: {_clienteId}\nNombre: {_nombreCliente} {_apellidoCliente}",
-                "Información del Cliente", MessageBoxButton.OK, MessageBoxImage.Information);
-
             LoadInventoryData();
         }
 

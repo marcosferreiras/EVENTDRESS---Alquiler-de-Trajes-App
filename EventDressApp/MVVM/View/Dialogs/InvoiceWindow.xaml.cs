@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,7 +31,7 @@ namespace EventDressApp.MVVM.View.Dialogs
             // Mostrar información del cliente
             DisplayClientInfo();
 
-            // Crear detalles de factura
+            // Crear detalles de la factura
             CreateInvoiceDetails();
         }
 
@@ -39,8 +40,6 @@ namespace EventDressApp.MVVM.View.Dialogs
             StringBuilder clientInfo = new StringBuilder();
             clientInfo.AppendLine($"Cliente ID: {_clienteId}");
             clientInfo.AppendLine($"Nombre: {_nombreCliente} {_apellidoCliente}");
-
-            // Mostrar la información en un TextBox o TextBlock (asegúrate de que exista en el XAML)
             ClientInfoTextBox.Text = clientInfo.ToString();
         }
 
@@ -57,19 +56,12 @@ namespace EventDressApp.MVVM.View.Dialogs
                 totalAmount += price;
             }
 
-            // Mostrar los detalles en la ventana
             InvoiceTextBox.Text = invoiceDetails.ToString();
             TotalTextBlock.Text = $"Total: ${totalAmount:F2}";
         }
 
-        private void PrintInvoice(object sender, RoutedEventArgs e)
+        private bool GenerateAndStoreInvoice()
         {
-            if (_selectedRows == null || _selectedRows.Count == 0)
-            {
-                MessageBox.Show("No hay elementos seleccionados para imprimir.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             try
             {
                 // Convertir las prendas seleccionadas a JSON para el stored procedure
@@ -88,7 +80,7 @@ namespace EventDressApp.MVVM.View.Dialogs
                 var parameters = new[]
                 {
                     new SqlParameter("@ClienteID", SqlDbType.Int) { Value = _clienteId },
-                    new SqlParameter("@UsuarioID", SqlDbType.Int) { Value = 1 }, // Cambiar por el ID del usuario actual
+                    new SqlParameter("@UsuarioID", SqlDbType.Int) { Value = 9 }, // Cambiar por el ID del usuario actual
                     new SqlParameter("@FechaInicio", SqlDbType.DateTime) { Value = DateTime.Now },
                     new SqlParameter("@FechaDevolucion", SqlDbType.DateTime) { Value = DateTime.Now.AddDays(7) },
                     new SqlParameter("@DetallesReservas", SqlDbType.NVarChar) { Value = detallesJson }
@@ -99,70 +91,94 @@ namespace EventDressApp.MVVM.View.Dialogs
                 if (result > 0)
                 {
                     MessageBox.Show("Factura generada correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return true;
                 }
                 else
                 {
                     MessageBox.Show("No se pudo generar la factura.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al generar la factura: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+        }
+
+        private void PrintInvoice(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Intentar generar y almacenar la factura en la base de datos
+                if (!GenerateAndStoreInvoice())
+                {
+                    MessageBox.Show("No se puede imprimir porque la factura no se generó correctamente.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
                 // Crear un FlowDocument para la vista previa de impresión
-                FlowDocument document = CreateInvoiceDocument();
+                FlowDocument document = CreateInvoiceDocument(_selectedRows.Sum(row => Convert.ToDouble(row["precio_diario_prenda"])));
 
                 // Mostrar vista previa
-                FlowDocumentScrollViewer viewer = new FlowDocumentScrollViewer
-                {
-                    Document = document,
-                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto
-                };
-
-                Window previewWindow = new Window
-                {
-                    Title = "Vista previa de la factura",
-                    Width = 800,
-                    Height = 600,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                    Owner = this
-                };
-
-                // Agregar botón de impresión
-                Button printButton = new Button
-                {
-                    Content = "Imprimir",
-                    Margin = new Thickness(10),
-                    HorizontalAlignment = HorizontalAlignment.Center
-                };
-                printButton.Click += (s, args) =>
-                {
-                    try
-                    {
-                        PrintDialog printDialog = new PrintDialog();
-                        if (printDialog.ShowDialog() == true)
-                        {
-                            IDocumentPaginatorSource paginator = document as IDocumentPaginatorSource;
-                            printDialog.PrintDocument(paginator.DocumentPaginator, "Factura");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error al imprimir: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                };
-
-                StackPanel previewPanel = new StackPanel();
-                previewPanel.Children.Add(viewer);
-                previewPanel.Children.Add(printButton);
-
-                previewWindow.Content = previewPanel;
+                Window previewWindow = CreatePreviewWindow(document);
                 previewWindow.ShowDialog();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al generar la factura: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error al imprimir la factura: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private FlowDocument CreateInvoiceDocument()
+        private Window CreatePreviewWindow(FlowDocument document)
+        {
+            FlowDocumentScrollViewer viewer = new FlowDocumentScrollViewer
+            {
+                Document = document,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+            };
+
+            Window previewWindow = new Window
+            {
+                Title = "Vista previa de la factura",
+                Width = 800,
+                Height = 600,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = this
+            };
+
+            Button printButton = new Button
+            {
+                Content = "Imprimir",
+                Margin = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            printButton.Click += (s, args) =>
+            {
+                try
+                {
+                    PrintDialog printDialog = new PrintDialog();
+                    if (printDialog.ShowDialog() == true)
+                    {
+                        IDocumentPaginatorSource paginator = document as IDocumentPaginatorSource;
+                        printDialog.PrintDocument(paginator.DocumentPaginator, "Factura");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al imprimir: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            };
+
+            StackPanel previewPanel = new StackPanel();
+            previewPanel.Children.Add(viewer);
+            previewPanel.Children.Add(printButton);
+
+            previewWindow.Content = previewPanel;
+            return previewWindow;
+        }
+
+        private FlowDocument CreateInvoiceDocument(double totalAmount)
         {
             FlowDocument document = new FlowDocument
             {
@@ -171,34 +187,63 @@ namespace EventDressApp.MVVM.View.Dialogs
                 PagePadding = new Thickness(40)
             };
 
-            // Encabezado
             Paragraph header = new Paragraph(new Run("SISTEMA DE INVENTARIO - RECIBO DE VENTA"))
             {
-                FontSize = 16,
+                FontSize = 18,
                 FontWeight = FontWeights.Bold,
                 TextAlignment = TextAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 20)
             };
             document.Blocks.Add(header);
 
-            // Información del cliente
             Paragraph clientInfo = new Paragraph(new Run($"Cliente ID: {_clienteId}\nNombre: {_nombreCliente} {_apellidoCliente}"))
             {
                 FontSize = 14,
                 FontWeight = FontWeights.Bold,
-                TextAlignment = TextAlignment.Left
+                TextAlignment = TextAlignment.Left,
+                Margin = new Thickness(0, 0, 0, 20)
             };
             document.Blocks.Add(clientInfo);
 
-            // Detalles de los artículos
-            // (El resto del método CreateInvoiceDocument permanece igual)
+            Table itemsTable = new Table();
+            itemsTable.Columns.Add(new TableColumn { Width = new GridLength(300) });
+            itemsTable.Columns.Add(new TableColumn { Width = new GridLength(100) });
+
+            TableRowGroup itemsGroup = new TableRowGroup();
+            TableRow headerRow = new TableRow();
+            headerRow.Cells.Add(new TableCell(new Paragraph(new Run("Artículo")) { FontWeight = FontWeights.Bold }));
+            headerRow.Cells.Add(new TableCell(new Paragraph(new Run("Precio")) { FontWeight = FontWeights.Bold }));
+            itemsGroup.Rows.Add(headerRow);
+
+            foreach (var row in _selectedRows)
+            {
+                string name = row["nombre_prenda"].ToString();
+                double price = Convert.ToDouble(row["precio_diario_prenda"]);
+
+                TableRow itemRow = new TableRow();
+                itemRow.Cells.Add(new TableCell(new Paragraph(new Run(name))));
+                itemRow.Cells.Add(new TableCell(new Paragraph(new Run($"${price:F2}"))));
+                itemsGroup.Rows.Add(itemRow);
+            }
+
+            itemsTable.RowGroups.Add(itemsGroup);
+            document.Blocks.Add(itemsTable);
+
+            Paragraph totalParagraph = new Paragraph(new Run($"Total: ${totalAmount:F2}"))
+            {
+                FontSize = 16,
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Right,
+                Margin = new Thickness(0, 20, 0, 0)
+            };
+            document.Blocks.Add(totalParagraph);
 
             return document;
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }
